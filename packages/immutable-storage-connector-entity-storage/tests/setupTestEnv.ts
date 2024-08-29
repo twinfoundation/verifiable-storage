@@ -20,7 +20,7 @@ export const TEST_ADDRESS_2 = "test-address-2";
 initSchema();
 
 EntityStorageConnectorFactory.register(
-	"immutable-storage",
+	"immutable-item",
 	() =>
 		new MemoryEntityStorageConnector<ImmutableItem>({
 			entitySchema: nameof<ImmutableItem>()

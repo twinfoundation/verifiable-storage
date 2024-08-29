@@ -26,7 +26,7 @@ describe("EntityStorageImmutableStorageConnector", () => {
 
 		const store =
 			EntityStorageConnectorFactory.get<MemoryEntityStorageConnector<ImmutableItem>>(
-				"immutable-storage"
+				"immutable-item"
 			).getStore();
 		expect(store?.[0].id).toEqual(urn.namespaceSpecific(1));
 		expect(store?.[0].controller).toEqual(TEST_IDENTITY_ID);
@@ -48,7 +48,7 @@ describe("EntityStorageImmutableStorageConnector", () => {
 
 		const store =
 			EntityStorageConnectorFactory.get<MemoryEntityStorageConnector<ImmutableItem>>(
-				"immutable-storage"
+				"immutable-item"
 			).getStore();
 		expect(store?.length).toEqual(0);
 	});

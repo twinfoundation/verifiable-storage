@@ -32,11 +32,11 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 	/**
 	 * Create a new instance of EntityStorageImmutableStorageConnector.
 	 * @param options The dependencies for the class.
-	 * @param options.immutableStorageEntityStorageType The entity storage for immutable storage items, defaults to "immutable-storage".
+	 * @param options.immutableStorageEntityStorageType The entity storage for immutable storage items, defaults to "immutable-item".
 	 */
 	constructor(options?: { immutableStorageEntityStorageType?: string }) {
 		this._immutableStorageEntityStorage = EntityStorageConnectorFactory.get(
-			options?.immutableStorageEntityStorageType ?? "immutable-storage"
+			options?.immutableStorageEntityStorageType ?? "immutable-item"
 		);
 	}
 
