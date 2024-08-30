@@ -1,24 +1,20 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseError, Converter, GeneralError, Guards, Is, Urn, type IError } from "@gtsc/core";
-import { Bip39 } from "@gtsc/crypto";
+import { Converter, GeneralError, Guards, Is, Urn } from "@gtsc/core";
+import { Iota } from "@gtsc/dlt-iota";
 import type { IImmutableStorageConnector } from "@gtsc/immutable-storage-models";
 import { nameof } from "@gtsc/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@gtsc/vault-models";
-import { WalletConnectorFactory, type IWalletConnector } from "@gtsc/wallet-models";
 import {
 	AddressUnlockCondition,
 	BasicOutput,
 	Client,
-	CoinType,
 	Ed25519Address,
 	FeatureType,
 	MetadataFeature,
 	UTXOInput,
 	Utils,
 	type BasicOutputBuilderParams,
-	type Block,
-	type IBuildBlockOptions,
 	type TransactionPayload
 } from "@iota/sdk-wasm/node/lib/index.js";
 import type { IIotaImmutableStorageConnectorConfig } from "./models/IIotaImmutableStorageConnectorConfig";
@@ -33,30 +29,6 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 	public static readonly NAMESPACE: string = "iota";
 
 	/**
-	 * Default name for the seed secret.
-	 * @internal
-	 */
-	private static readonly _DEFAULT_SEED_SECRET_NAME: string = "seed";
-
-	/**
-	 * Default name for the mnemonic secret.
-	 * @internal
-	 */
-	private static readonly _DEFAULT_MNEMONIC_SECRET_NAME: string = "mnemonic";
-
-	/**
-	 * The default length of time to wait for the inclusion of a transaction in seconds.
-	 * @internal
-	 */
-	private static readonly _DEFAULT_INCLUSION_TIMEOUT: number = 60;
-
-	/**
-	 * Default coin type.
-	 * @internal
-	 */
-	private static readonly _DEFAULT_COIN_TYPE: number = CoinType.IOTA;
-
-	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<IotaImmutableStorageConnector>();
@@ -68,12 +40,6 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 	private readonly _vaultConnector: IVaultConnector;
 
 	/**
-	 * Connector for wallet operations.
-	 * @internal
-	 */
-	private readonly _walletConnector: IWalletConnector;
-
-	/**
 	 * The configuration for the connector.
 	 * @internal
 	 */
@@ -83,12 +49,10 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 	 * Create a new instance of IotaImmutableStorageConnector.
 	 * @param options The options for the connector.
 	 * @param options.vaultConnectorType The type of the vault connector, defaults to "vault".
-	 * @param options.walletConnectorType The type of the wallet connector, defaults to "wallet".
 	 * @param options.config The configuration for the connector.
 	 */
 	constructor(options: {
 		vaultConnectorType?: string;
-		walletConnectorType?: string;
 		config: IIotaImmutableStorageConnectorConfig;
 	}) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
@@ -103,14 +67,9 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 			options.config.clientOptions
 		);
 		this._vaultConnector = VaultConnectorFactory.get(options.vaultConnectorType ?? "vault");
-		this._walletConnector = WalletConnectorFactory.get(options.walletConnectorType ?? "wallet");
 
 		this._config = options.config;
-		this._config.vaultMnemonicId ??= IotaImmutableStorageConnector._DEFAULT_MNEMONIC_SECRET_NAME;
-		this._config.vaultSeedId ??= IotaImmutableStorageConnector._DEFAULT_SEED_SECRET_NAME;
-		this._config.coinType ??= IotaImmutableStorageConnector._DEFAULT_COIN_TYPE;
-		this._config.inclusionTimeoutSeconds ??=
-			IotaImmutableStorageConnector._DEFAULT_INCLUSION_TIMEOUT;
+		Iota.populateConfig(this._config);
 	}
 
 	/**
@@ -124,7 +83,9 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
 
 		try {
-			const walletAddresses = await this._walletConnector.getAddresses(
+			const walletAddresses = await Iota.getAddresses(
+				this._config,
+				this._vaultConnector,
 				controller,
 				0,
 				this._config.walletAddressIndex ?? 0,
@@ -142,9 +103,15 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 
 			const basicOutput = await client.buildBasicOutput(buildParams);
 
-			const blockDetails = await this.prepareAndPostTransaction(controller, client, {
-				outputs: [basicOutput]
-			});
+			const blockDetails = await Iota.prepareAndPostTransaction(
+				this._config,
+				this._vaultConnector,
+				controller,
+				client,
+				{
+					outputs: [basicOutput]
+				}
+			);
 
 			const transactionId = Utils.transactionId(blockDetails.block.payload as TransactionPayload);
 
@@ -156,7 +123,7 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 				this.CLASS_NAME,
 				"storingFailed",
 				undefined,
-				this.extractPayloadError(error)
+				Iota.extractPayloadError(error)
 			);
 		}
 	}
@@ -199,7 +166,7 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 				this.CLASS_NAME,
 				"gettingFailed",
 				undefined,
-				this.extractPayloadError(error)
+				Iota.extractPayloadError(error)
 			);
 		}
 	}
@@ -231,14 +198,16 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 
 			const basicOutputResponse = await client.getOutput(`${immutableItemId}0000`);
 
-			const walletAddresses = await this._walletConnector.getAddresses(
+			const walletAddresses = await Iota.getAddresses(
+				this._config,
+				this._vaultConnector,
 				controller,
 				0,
 				this._config.walletAddressIndex ?? 0,
 				1
 			);
 
-			await this.prepareAndPostTransaction(controller, client, {
+			await Iota.prepareAndPostTransaction(this._config, this._vaultConnector, controller, client, {
 				inputs: [
 					new UTXOInput(
 						basicOutputResponse.metadata.transactionId,
@@ -256,115 +225,8 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 				this.CLASS_NAME,
 				"removingFailed",
 				undefined,
-				this.extractPayloadError(error)
+				Iota.extractPayloadError(error)
 			);
 		}
-	}
-
-	/**
-	 * Prepare a transaction for sending, post and wait for inclusion.
-	 * @param controller The identity of the user to access the vault keys.
-	 * @param client The client to use.
-	 * @param options The options for the transaction.
-	 * @returns The block id and block.
-	 * @internal
-	 */
-	private async prepareAndPostTransaction(
-		controller: string,
-		client: Client,
-		options: IBuildBlockOptions
-	): Promise<{ blockId: string; block: Block }> {
-		const seed = await this.getSeed(controller);
-		const secretManager = { hexSeed: Converter.bytesToHex(seed, true) };
-
-		const prepared = await client.prepareTransaction(secretManager, {
-			coinType: this._config.coinType ?? IotaImmutableStorageConnector._DEFAULT_COIN_TYPE,
-			...options
-		});
-
-		const signed = await client.signTransaction(secretManager, prepared);
-
-		const blockIdAndBlock = await client.postBlockPayload(signed);
-
-		try {
-			const timeoutSeconds =
-				this._config.inclusionTimeoutSeconds ??
-				IotaImmutableStorageConnector._DEFAULT_INCLUSION_TIMEOUT;
-
-			await client.retryUntilIncluded(blockIdAndBlock[0], 2, Math.ceil(timeoutSeconds / 2));
-		} catch (error) {
-			throw new GeneralError(
-				this.CLASS_NAME,
-				"inclusionFailed",
-				undefined,
-				this.extractPayloadError(error)
-			);
-		}
-
-		return {
-			blockId: blockIdAndBlock[0],
-			block: blockIdAndBlock[1]
-		};
-	}
-
-	/**
-	 * Get the seed from the vault.
-	 * @returns The seed.
-	 * @internal
-	 */
-	private async getSeed(controller: string): Promise<Uint8Array> {
-		try {
-			const seedBase64 = await this._vaultConnector.getSecret<string>(
-				this.buildSeedKey(controller)
-			);
-			return Converter.base64ToBytes(seedBase64);
-		} catch {}
-
-		const mnemonic = await this._vaultConnector.getSecret<string>(
-			this.buildMnemonicKey(controller)
-		);
-
-		return Bip39.mnemonicToSeed(mnemonic);
-	}
-
-	/**
-	 * Extract error from SDK payload.
-	 * @param error The error to extract.
-	 * @returns The extracted error.
-	 */
-	private extractPayloadError(error: unknown): IError {
-		if (Is.json(error)) {
-			const obj = JSON.parse(error);
-			const message = obj.payload?.error;
-			if (message === "no input with matching ed25519 address provided") {
-				return new GeneralError(this.CLASS_NAME, "insufficientFunds");
-			}
-			return {
-				name: "IOTA",
-				message
-			};
-		}
-
-		return BaseError.fromError(error);
-	}
-
-	/**
-	 * Build the key name to access the mnemonic in the vault.
-	 * @param identity The identity of the user to access the vault keys.
-	 * @returns The vault key.
-	 * @internal
-	 */
-	private buildMnemonicKey(identity: string): string {
-		return `${identity}/${this._config.vaultMnemonicId ?? IotaImmutableStorageConnector._DEFAULT_MNEMONIC_SECRET_NAME}`;
-	}
-
-	/**
-	 * Build the key name to access the seed in the vault.
-	 * @param identity The identity of the user to access the vault keys.
-	 * @returns The vault key.
-	 * @internal
-	 */
-	private buildSeedKey(identity: string): string {
-		return `${identity}/${this._config.vaultSeedId ?? IotaImmutableStorageConnector._DEFAULT_SEED_SECRET_NAME}`;
 	}
 }
