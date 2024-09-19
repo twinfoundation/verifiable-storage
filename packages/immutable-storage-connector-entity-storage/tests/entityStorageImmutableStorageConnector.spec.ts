@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter, ObjectHelper, Urn } from "@gtsc/core";
-import type { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
-import { EntityStorageConnectorFactory } from "@gtsc/entity-storage-models";
+import { Converter, ObjectHelper, Urn } from "@twin.org/core";
+import type { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
+import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
 import { TEST_IDENTITY_ID } from "./setupTestEnv";
 import type { ImmutableItem } from "../src/entities/immutableItem";
 import { EntityStorageImmutableStorageConnector } from "../src/entityStorageImmutableStorageConnector";

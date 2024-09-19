@@ -1,4 +1,4 @@
-# @gtsc/immutable-storage-connector-iota
+# @twin.org/immutable-storage-connector-iota
 
 ## Classes
 

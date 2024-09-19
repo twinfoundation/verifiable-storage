@@ -1,4 +1,4 @@
-# @gtsc/immutable-storage-models
+# @twin.org/immutable-storage-models
 
 ## Interfaces
 

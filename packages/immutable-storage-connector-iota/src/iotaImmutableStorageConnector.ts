@@ -1,10 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter, GeneralError, Guards, Is, Urn } from "@gtsc/core";
-import { Iota } from "@gtsc/dlt-iota";
-import type { IImmutableStorageConnector } from "@gtsc/immutable-storage-models";
-import { nameof } from "@gtsc/nameof";
-import { VaultConnectorFactory, type IVaultConnector } from "@gtsc/vault-models";
 import {
 	AddressUnlockCondition,
 	BasicOutput,
@@ -17,6 +12,11 @@ import {
 	type BasicOutputBuilderParams,
 	type TransactionPayload
 } from "@iota/sdk-wasm/node/lib/index.js";
+import { Converter, GeneralError, Guards, Is, Urn } from "@twin.org/core";
+import { Iota } from "@twin.org/dlt-iota";
+import type { IImmutableStorageConnector } from "@twin.org/immutable-storage-models";
+import { nameof } from "@twin.org/nameof";
+import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import type { IIotaImmutableStorageConnectorConfig } from "./models/IIotaImmutableStorageConnectorConfig";
 
 /**

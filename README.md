@@ -1,4 +1,4 @@
-# GTSC Immutable Storage
+# TWIN Immutable Storage
 
 This mono-repository contains packages which are used when creating and interacting with immutable storage.
 

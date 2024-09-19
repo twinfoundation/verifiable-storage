@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { ObjectHelper, Urn } from "@gtsc/core";
+import { ObjectHelper, Urn } from "@twin.org/core";
 import {
 	TEST_BECH32_HRP,
 	TEST_CLIENT_OPTIONS,
