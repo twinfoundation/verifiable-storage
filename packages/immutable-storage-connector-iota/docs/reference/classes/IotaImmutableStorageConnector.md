@@ -36,7 +36,7 @@ The configuration for the connector.
 
 ### NAMESPACE
 
-> `static` `readonly` **NAMESPACE**: `string` = `"iota"`
+> `readonly` `static` **NAMESPACE**: `string` = `"iota"`
 
 The namespace supported by the immutable storage connector.
 

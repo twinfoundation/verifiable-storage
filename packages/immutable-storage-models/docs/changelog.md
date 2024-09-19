@@ -1,5 +1,5 @@
-# @gtsc/immutable-storage-models - Changelog
+# @twin.org/immutable-storage-models - Changelog
 
-## v0.0.3
+## v0.0.1-next.3
 
 - Initial Release

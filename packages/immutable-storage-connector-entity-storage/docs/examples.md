@@ -1,1 +1,1 @@
-# @gtsc/immutable-storage-connector-entity-storage - Examples
+# @twin.org/immutable-storage-connector-entity-storage - Examples

@@ -1,4 +1,4 @@
-# @gtsc/immutable-storage-connector-entity-storage
+# @twin.org/immutable-storage-connector-entity-storage
 
 ## Classes
 
