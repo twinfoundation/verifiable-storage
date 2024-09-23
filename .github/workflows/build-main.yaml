@@ -11,7 +11,6 @@ jobs:
 
     env:
       TEST_MNEMONIC: ${{ secrets.TEST_MNEMONIC }}
-      TEST_MNEMONIC_2: ${{ secrets.TEST_MNEMONIC_2 }}
 
     steps:
       - name: Checkout
