@@ -13,11 +13,14 @@ import {
 	type TransactionPayload
 } from "@iota/sdk-wasm/node/lib/index.js";
 import { Converter, GeneralError, Guards, Is, Urn } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { Iota } from "@twin.org/dlt-iota";
 import type { IImmutableStorageConnector } from "@twin.org/immutable-storage-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import type { IIotaImmutableStorageConnectorConfig } from "./models/IIotaImmutableStorageConnectorConfig";
+import type { IIotaImmutableStorageReceipt } from "./models/IIotaImmutableStorageReceipt";
+import { IotaImmutableStorageTypes } from "./models/iotaImmutableStorageTypes";
 
 /**
  * Class for performing immutable storage operations on IOTA.
@@ -76,9 +79,15 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 	 * Store an item in immutable storage.
 	 * @param controller The identity of the user to access the vault keys.
 	 * @param data The data to store.
-	 * @returns The id of the stored immutable item in urn format.
+	 * @returns The id of the stored immutable item in urn format and the receipt.
 	 */
-	public async store(controller: string, data: Uint8Array): Promise<string> {
+	public async store(
+		controller: string,
+		data: Uint8Array
+	): Promise<{
+		id: string;
+		receipt: IJsonLdNodeObject;
+	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
 
@@ -113,11 +122,25 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 				}
 			);
 
-			const transactionId = Utils.transactionId(blockDetails.block.payload as TransactionPayload);
+			const transactionPayload = blockDetails.block.payload as TransactionPayload;
+
+			const transactionId = Utils.transactionId(transactionPayload);
 
 			const hrp = await client.getBech32Hrp();
 
-			return `immutable:${new Urn(IotaImmutableStorageConnector.NAMESPACE, `${hrp}:${transactionId}`).toString()}`;
+			const basicOutputResponse = await client.getOutput(`${transactionId}0000`);
+
+			const receipt: IIotaImmutableStorageReceipt = {
+				"@context": IotaImmutableStorageTypes.ContextRoot,
+				type: IotaImmutableStorageTypes.IotaReceipt,
+				milestoneIndexBooked: basicOutputResponse.metadata.milestoneIndexBooked,
+				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked
+			};
+
+			return {
+				id: `immutable:${new Urn(IotaImmutableStorageConnector.NAMESPACE, `${hrp}:${transactionId}`).toString()}`,
+				receipt: receipt as unknown as IJsonLdNodeObject
+			};
 		} catch (error) {
 			throw new GeneralError(
 				this.CLASS_NAME,
@@ -131,9 +154,17 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 	/**
 	 * Get an immutable item.
 	 * @param id The id of the item to get.
-	 * @returns The data for the item.
+	 * @param options Additional options for getting the item.
+	 * @param options.includeData Should the data be included in the response, defaults to true.
+	 * @returns The data for the item and the receipt.
 	 */
-	public async get(id: string): Promise<Uint8Array> {
+	public async get(
+		id: string,
+		options?: { includeData?: boolean }
+	): Promise<{
+		data?: Uint8Array;
+		receipt: IJsonLdNodeObject;
+	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
@@ -154,13 +185,26 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 			const basicOutputResponse = await client.getOutput(`${immutableItemId}0000`);
 			const basicOutput = basicOutputResponse.output as BasicOutput;
 
-			const metadataFeatures = basicOutput.features?.filter(f => f.type === FeatureType.Metadata);
+			const receipt: IIotaImmutableStorageReceipt = {
+				"@context": IotaImmutableStorageTypes.ContextRoot,
+				type: IotaImmutableStorageTypes.IotaReceipt,
+				milestoneIndexBooked: basicOutputResponse.metadata.milestoneIndexBooked,
+				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked
+			};
 
-			const metadata = Is.arrayValue(metadataFeatures)
-				? Converter.hexToBytes((metadataFeatures[0] as MetadataFeature).data)
-				: new Uint8Array();
+			let data: Uint8Array | undefined;
+			if (options?.includeData ?? true) {
+				const metadataFeatures = basicOutput.features?.filter(f => f.type === FeatureType.Metadata);
 
-			return metadata;
+				data = Is.arrayValue(metadataFeatures)
+					? Converter.hexToBytes((metadataFeatures[0] as MetadataFeature).data)
+					: new Uint8Array();
+			}
+
+			return {
+				receipt: receipt as unknown as IJsonLdNodeObject,
+				data
+			};
 		} catch (error) {
 			throw new GeneralError(
 				this.CLASS_NAME,

@@ -9,6 +9,7 @@ import {
 	RandomHelper,
 	Urn
 } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -16,6 +17,8 @@ import {
 import type { IImmutableStorageConnector } from "@twin.org/immutable-storage-models";
 import { nameof } from "@twin.org/nameof";
 import type { ImmutableItem } from "./entities/immutableItem";
+import { EntityStorageImmutableStorageTypes } from "./models/entityStorageImmutableStorageTypes";
+import type { IEntityStorageImmutableStorageReceipt } from "./models/IEntityStorageImmutableStorageReceipt";
 
 /**
  * Class for performing immutable storage operations on entity storage.
@@ -54,7 +57,13 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 	 * @param data The data to store.
 	 * @returns The id of the stored immutable item in urn format.
 	 */
-	public async store(controller: string, data: Uint8Array): Promise<string> {
+	public async store(
+		controller: string,
+		data: Uint8Array
+	): Promise<{
+		id: string;
+		receipt: IJsonLdNodeObject;
+	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
 
@@ -69,7 +78,15 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 
 			await this._immutableStorageEntityStorage.set(immutableItem);
 
-			return `immutable:${new Urn(EntityStorageImmutableStorageConnector.NAMESPACE, immutableItemId).toString()}`;
+			const receipt: IEntityStorageImmutableStorageReceipt = {
+				"@context": EntityStorageImmutableStorageTypes.ContextRoot,
+				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt
+			};
+
+			return {
+				id: `immutable:${new Urn(EntityStorageImmutableStorageConnector.NAMESPACE, immutableItemId).toString()}`,
+				receipt: receipt as unknown as IJsonLdNodeObject
+			};
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "storingFailed", undefined, error);
 		}
@@ -78,9 +95,17 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 	/**
 	 * Get an immutable item.
 	 * @param id The id of the item to get.
-	 * @returns The data for the item.
+	 * @param options Additional options for getting the item.
+	 * @param options.includeData Should the data be included in the response, defaults to true.
+	 * @returns The data for the item and the receipt.
 	 */
-	public async get(id: string): Promise<Uint8Array> {
+	public async get(
+		id: string,
+		options?: { includeData?: boolean }
+	): Promise<{
+		data?: Uint8Array;
+		receipt: IJsonLdNodeObject;
+	}> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 		const urnParsed = Urn.fromValidString(id);
 
@@ -99,7 +124,16 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 				throw new NotFoundError(this.CLASS_NAME, "immutableStorageNotFound");
 			}
 
-			return Converter.base64ToBytes(immutableItem.data);
+			const receipt: IEntityStorageImmutableStorageReceipt = {
+				"@context": EntityStorageImmutableStorageTypes.ContextRoot,
+				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt
+			};
+
+			return {
+				receipt: receipt as unknown as IJsonLdNodeObject,
+				data:
+					(options?.includeData ?? true) ? Converter.base64ToBytes(immutableItem.data) : undefined
+			};
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "gettingFailed", undefined, error);
 		}

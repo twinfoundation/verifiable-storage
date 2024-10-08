@@ -1,0 +1,8 @@
+{
+	"baseUrl": "https://schema.twindev.org/immutable-storage/",
+	"sources": ["./src/models/**/*.ts"],
+	"types": ["IIotaImmutableStorageReceipt"],
+	"externalReferences": {
+		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1"
+	}
+}
