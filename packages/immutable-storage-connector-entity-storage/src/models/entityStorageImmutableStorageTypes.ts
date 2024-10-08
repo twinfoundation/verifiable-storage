@@ -9,7 +9,7 @@ export const EntityStorageImmutableStorageTypes = {
 	/**
 	 * Represents entity storage receipt.
 	 */
-	EntityStorageReceipt: "EntityStorageReceipt"
+	EntityStorageReceipt: "ImmutableStorageEntityStorageReceipt"
 } as const;
 
 /**

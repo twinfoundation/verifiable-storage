@@ -1,4 +1,4 @@
-# Interface: IEntityStorageImmutableStorageReceipt
+# Interface: IImmutableStorageEntityStorageReceipt
 
 Receipt for the entity storage Immutable Storage connector.
 
@@ -14,6 +14,6 @@ JSON-LD Context.
 
 ### type
 
-> **type**: `"EntityStorageReceipt"`
+> **type**: `"ImmutableStorageEntityStorageReceipt"`
 
 JSON-LD Type.

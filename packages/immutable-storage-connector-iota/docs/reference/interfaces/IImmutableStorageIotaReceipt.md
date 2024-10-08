@@ -1,4 +1,4 @@
-# Interface: IIotaImmutableStorageReceipt
+# Interface: IImmutableStorageIotaReceipt
 
 Receipt for the IOTA Immutable Storage connector.
 
@@ -14,7 +14,7 @@ JSON-LD Context.
 
 ### type
 
-> **type**: `"IotaReceipt"`
+> **type**: `"ImmutableStorageIotaReceipt"`
 
 JSON-LD Type.
 

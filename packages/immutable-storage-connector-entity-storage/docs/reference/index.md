@@ -7,7 +7,7 @@
 
 ## Interfaces
 
-- [IEntityStorageImmutableStorageReceipt](interfaces/IEntityStorageImmutableStorageReceipt.md)
+- [IImmutableStorageEntityStorageReceipt](interfaces/IImmutableStorageEntityStorageReceipt.md)
 
 ## Type Aliases
 

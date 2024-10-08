@@ -21,7 +21,7 @@ import {
 import { nameof } from "@twin.org/nameof";
 import type { ImmutableItem } from "./entities/immutableItem";
 import { EntityStorageImmutableStorageTypes } from "./models/entityStorageImmutableStorageTypes";
-import type { IEntityStorageImmutableStorageReceipt } from "./models/IEntityStorageImmutableStorageReceipt";
+import type { IImmutableStorageEntityStorageReceipt } from "./models/IImmutableStorageEntityStorageReceipt";
 
 /**
  * Class for performing immutable storage operations on entity storage.
@@ -81,7 +81,7 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 
 			await this._immutableStorageEntityStorage.set(immutableItem);
 
-			const receipt: IEntityStorageImmutableStorageReceipt = {
+			const receipt: IImmutableStorageEntityStorageReceipt = {
 				"@context": ImmutableStorageTypes.ContextRoot,
 				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt
 			};
@@ -127,7 +127,7 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 				throw new NotFoundError(this.CLASS_NAME, "immutableStorageNotFound");
 			}
 
-			const receipt: IEntityStorageImmutableStorageReceipt = {
+			const receipt: IImmutableStorageEntityStorageReceipt = {
 				"@context": ImmutableStorageTypes.ContextRoot,
 				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt
 			};

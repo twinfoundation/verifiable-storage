@@ -25,7 +25,7 @@ describe("EntityStorageImmutableStorageConnector", () => {
 		expect(urn.namespaceSpecific(1).length).toEqual(64);
 
 		expect(result.receipt["@context"]).toEqual("https://schema.twindev.org/immutable-storage/");
-		expect(result.receipt.type).toEqual("EntityStorageReceipt");
+		expect(result.receipt.type).toEqual("ImmutableStorageEntityStorageReceipt");
 
 		const store =
 			EntityStorageConnectorFactory.get<MemoryEntityStorageConnector<ImmutableItem>>(
@@ -43,7 +43,7 @@ describe("EntityStorageImmutableStorageConnector", () => {
 		const response = await connector.get(immuutableItemId);
 
 		expect(response.receipt["@context"]).toEqual("https://schema.twindev.org/immutable-storage/");
-		expect(response.receipt.type).toEqual("EntityStorageReceipt");
+		expect(response.receipt.type).toEqual("ImmutableStorageEntityStorageReceipt");
 		expect(response.data).toEqual(ObjectHelper.toBytes({ bar: "foo" }));
 	});
 

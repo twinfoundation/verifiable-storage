@@ -6,7 +6,7 @@ import type { EntityStorageImmutableStorageTypes } from "./entityStorageImmutabl
 /**
  * Receipt for the entity storage Immutable Storage connector.
  */
-export interface IEntityStorageImmutableStorageReceipt {
+export interface IImmutableStorageEntityStorageReceipt {
 	/**
 	 * JSON-LD Context.
 	 */

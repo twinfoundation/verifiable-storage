@@ -8,6 +8,6 @@ The types of IOTA immutable storage data.
 
 ### IotaReceipt
 
-> `readonly` **IotaReceipt**: `"IotaReceipt"` = `"IotaReceipt"`
+> `readonly` **IotaReceipt**: `"ImmutableStorageIotaReceipt"` = `"ImmutableStorageIotaReceipt"`
 
 Represents IOTA receipt.

@@ -8,6 +8,6 @@ The types of entity storage immutable storage data.
 
 ### EntityStorageReceipt
 
-> `readonly` **EntityStorageReceipt**: `"EntityStorageReceipt"` = `"EntityStorageReceipt"`
+> `readonly` **EntityStorageReceipt**: `"ImmutableStorageEntityStorageReceipt"` = `"ImmutableStorageEntityStorageReceipt"`
 
 Represents entity storage receipt.

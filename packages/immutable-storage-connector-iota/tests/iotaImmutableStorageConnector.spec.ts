@@ -42,7 +42,7 @@ describe("IotaImmutableStorageConnector", () => {
 		expect(specificParts[2].length).toEqual(66);
 
 		expect(result.receipt["@context"]).toEqual("https://schema.twindev.org/immutable-storage/");
-		expect(result.receipt.type).toEqual("IotaReceipt");
+		expect(result.receipt.type).toEqual("ImmutableStorageIotaReceipt");
 		expect(Is.integer(result.receipt.milestoneIndexBooked)).toEqual(true);
 		expect(Is.integer(result.receipt.milestoneTimestampBooked)).toEqual(true);
 
@@ -60,7 +60,7 @@ describe("IotaImmutableStorageConnector", () => {
 		const response = await connector.get(immutableStorageId);
 
 		expect(response.receipt["@context"]).toEqual("https://schema.twindev.org/immutable-storage/");
-		expect(response.receipt.type).toEqual("IotaReceipt");
+		expect(response.receipt.type).toEqual("ImmutableStorageIotaReceipt");
 		expect(Is.integer(response.receipt.milestoneIndexBooked)).toEqual(true);
 		expect(Is.integer(response.receipt.milestoneTimestampBooked)).toEqual(true);
 

@@ -6,7 +6,7 @@ import type { IotaImmutableStorageTypes } from "./iotaImmutableStorageTypes";
 /**
  * Receipt for the IOTA Immutable Storage connector.
  */
-export interface IIotaImmutableStorageReceipt {
+export interface IImmutableStorageIotaReceipt {
 	/**
 	 * JSON-LD Context.
 	 */
