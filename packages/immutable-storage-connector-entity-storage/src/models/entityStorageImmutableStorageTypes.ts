@@ -7,11 +7,6 @@
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntityStorageImmutableStorageTypes = {
 	/**
-	 * The context root for the immutable storage types.
-	 */
-	ContextRoot: "https://schema.twindev.org/immutable-storage/",
-
-	/**
 	 * Represents entity storage receipt.
 	 */
 	EntityStorageReceipt: "EntityStorageReceipt"
