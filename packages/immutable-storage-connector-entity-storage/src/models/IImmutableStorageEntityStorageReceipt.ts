@@ -16,4 +16,9 @@ export interface IImmutableStorageEntityStorageReceipt {
 	 * JSON-LD Type.
 	 */
 	type: typeof EntityStorageImmutableStorageTypes.EntityStorageReceipt;
+
+	/**
+	 * The entity storage Id.
+	 */
+	entityStorageId: string;
 }

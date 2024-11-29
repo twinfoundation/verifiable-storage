@@ -26,4 +26,14 @@ export interface IImmutableStorageIotaReceipt {
 	 * The timestamp of the milestone that the item was booked in to the ledger.
 	 */
 	milestoneTimestampBooked: number;
+
+	/**
+	 * The network for the receipt.
+	 */
+	network: string;
+
+	/**
+	 * The transaction for the receipt.
+	 */
+	transactionId: string;
 }

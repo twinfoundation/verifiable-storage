@@ -83,7 +83,8 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 
 			const receipt: IImmutableStorageEntityStorageReceipt = {
 				"@context": ImmutableStorageTypes.ContextRoot,
-				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt
+				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt,
+				entityStorageId: immutableItemId
 			};
 
 			return {
@@ -129,7 +130,8 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 
 			const receipt: IImmutableStorageEntityStorageReceipt = {
 				"@context": ImmutableStorageTypes.ContextRoot,
-				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt
+				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt,
+				entityStorageId: immutableItemId
 			};
 
 			return {

@@ -137,11 +137,13 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 				"@context": ImmutableStorageTypes.ContextRoot,
 				type: IotaImmutableStorageTypes.IotaReceipt,
 				milestoneIndexBooked: basicOutputResponse.metadata.milestoneIndexBooked,
-				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked
+				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked,
+				network: hrp,
+				transactionId
 			};
 
 			return {
-				id: `immutable:${new Urn(IotaImmutableStorageConnector.NAMESPACE, `${hrp}:${transactionId}`).toString()}`,
+				id: `immutable:${new Urn(IotaImmutableStorageConnector.NAMESPACE, [hrp, transactionId]).toString()}`,
 				receipt: receipt as unknown as IJsonLdNodeObject
 			};
 		} catch (error) {
@@ -182,17 +184,20 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 			const client = new Client(this._config.clientOptions);
 			const immutableItemParts = urnParsed.namespaceSpecificParts(1);
 
-			const immutableItemId = immutableItemParts[1];
-			Guards.stringHexLength(this.CLASS_NAME, "immutableItemId", immutableItemId, 64, true);
+			const hrp = immutableItemParts[0];
+			const immutableTransactionId = immutableItemParts[1];
+			Guards.stringHexLength(this.CLASS_NAME, "immutableItemId", immutableTransactionId, 64, true);
 
-			const basicOutputResponse = await client.getOutput(`${immutableItemId}0000`);
+			const basicOutputResponse = await client.getOutput(`${immutableTransactionId}0000`);
 			const basicOutput = basicOutputResponse.output as BasicOutput;
 
 			const receipt: IImmutableStorageIotaReceipt = {
 				"@context": ImmutableStorageTypes.ContextRoot,
 				type: IotaImmutableStorageTypes.IotaReceipt,
 				milestoneIndexBooked: basicOutputResponse.metadata.milestoneIndexBooked,
-				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked
+				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked,
+				network: hrp,
+				transactionId: immutableTransactionId
 			};
 
 			let data: Uint8Array | undefined;
@@ -240,10 +245,10 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 			const client = new Client(this._config.clientOptions);
 			const immutableParts = urnParsed.namespaceSpecificParts(1);
 
-			const immutableItemId = immutableParts[1];
-			Guards.stringHexLength(this.CLASS_NAME, "immutableItemId", immutableItemId, 64, true);
+			const immutableTransactionId = immutableParts[1];
+			Guards.stringHexLength(this.CLASS_NAME, "immutableItemId", immutableTransactionId, 64, true);
 
-			const basicOutputResponse = await client.getOutput(`${immutableItemId}0000`);
+			const basicOutputResponse = await client.getOutput(`${immutableTransactionId}0000`);
 
 			const walletAddresses = await Iota.getAddresses(
 				this._config,
