@@ -21,6 +21,7 @@ import {
 import { nameof } from "@twin.org/nameof";
 import type { ImmutableItem } from "./entities/immutableItem";
 import { EntityStorageImmutableStorageTypes } from "./models/entityStorageImmutableStorageTypes";
+import type { IEntityStorageImmutableStorageConnectorConstructorOptions } from "./models/IEntityStorageImmutableStorageConnectorConstructorOptions";
 import type { IImmutableStorageEntityStorageReceipt } from "./models/IImmutableStorageEntityStorageReceipt";
 
 /**
@@ -45,10 +46,9 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 
 	/**
 	 * Create a new instance of EntityStorageImmutableStorageConnector.
-	 * @param options The dependencies for the class.
-	 * @param options.immutableStorageEntityStorageType The entity storage for immutable storage items, defaults to "immutable-item".
+	 * @param options The options for the class.
 	 */
-	constructor(options?: { immutableStorageEntityStorageType?: string }) {
+	constructor(options?: IEntityStorageImmutableStorageConnectorConstructorOptions) {
 		this._immutableStorageEntityStorage = EntityStorageConnectorFactory.get(
 			options?.immutableStorageEntityStorageType ?? "immutable-item"
 		);

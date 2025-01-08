@@ -3,4 +3,5 @@
 export * from "./iotaImmutableStorageConnector";
 export * from "./models/IImmutableIotaStorageReceipt";
 export * from "./models/IIotaImmutableStorageConnectorConfig";
+export * from "./models/IIotaImmutableStorageConnectorConstructorOptions";
 export * from "./models/iotaImmutableStorageTypes";

@@ -3,5 +3,6 @@
 export * from "./entities/immutableItem";
 export * from "./entityStorageImmutableStorageConnector";
 export * from "./models/entityStorageImmutableStorageTypes";
+export * from "./models/IEntityStorageImmutableStorageConnectorConstructorOptions";
 export * from "./models/IImmutableStorageEntityStorageReceipt";
 export * from "./schema";
