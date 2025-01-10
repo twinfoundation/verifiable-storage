@@ -11,7 +11,7 @@ on:
           - immutable-storage-models
           - immutable-storage-connector-iota
           - immutable-storage-connector-entity-storage
-
+          - immutable-storage-connector-iota-rebased
 jobs:
   publish:
     runs-on: ubuntu-latest
