@@ -7,11 +7,6 @@ import type { IIotaRebasedConfig } from "@twin.org/dlt-iota-rebased";
  */
 export interface IIotaRebasedImmutableStorageConnectorConfig extends IIotaRebasedConfig {
 	/**
-	 * The network identifier.
-	 */
-	network: string;
-
-	/**
 	 * The name of the contract to use.
 	 * @default "immutable-storage"
 	 */

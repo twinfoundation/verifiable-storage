@@ -20,8 +20,6 @@
 			"invalidIdFormat": "The immutable storage URN \"{id}\" has an invalid format",
 			"connectorNotStarted": "Please call start() before using this connector. Package ID: \"{packageId}\" is missing.",
 			"deployTransactionFailed": "Deploying the contract failed with error: \"{error}\"",
-			"packageNotFoundOnNetwork": "The package \"{packageId}\" was not found on the network.",
-			"packageObjectError": "Failed to fetch the package object \"{packageId}\"",
 			"startFailed": "Failed to start the IOTA Rebased Immutable Storage connector.",
 			"invalidGasBudget": "The gas budget must be greater than 0"
 		}

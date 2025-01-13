@@ -24,6 +24,7 @@ dotenv.config({ path: [path.join(__dirname, ".env"), path.join(__dirname, ".env.
 Guards.stringValue("TestEnv", "TEST_NODE_ENDPOINT", process.env.TEST_NODE_ENDPOINT);
 Guards.stringValue("TestEnv", "TEST_FAUCET_ENDPOINT", process.env.TEST_FAUCET_ENDPOINT);
 Guards.stringValue("TestEnv", "TEST_COIN_TYPE", process.env.TEST_COIN_TYPE);
+Guards.stringValue("TestEnv", "TEST_NETWORK", process.env.TEST_NETWORK);
 Guards.stringValue("TestEnv", "TEST_EXPLORER_URL", process.env.TEST_EXPLORER_URL);
 
 if (!Is.stringValue(process.env.TEST_MNEMONIC)) {
@@ -42,7 +43,7 @@ if (!Is.stringValue(process.env.TEST_2_MNEMONIC)) {
 		`Please define TEST_2_MNEMONIC as a 24 word mnemonic either as an environment variable or inside an .env.dev file
          e.g. TEST_2_MNEMONIC="word0 word1 ... word23"
          You can generate one using the following command
-         npx "@twin.org/crypto-cli" mnemonic --env ./tests/.env.dev --env-prefix TEST_`
+         npx "@twin.org/crypto-cli" mnemonic --env ./tests/.env.dev --env-prefix TEST_2_ --merge-env`
 	);
 }
 
@@ -58,10 +59,8 @@ if (!Is.stringValue(process.env.TEST_NODE_MNEMONIC)) {
 
 export const TEST_NODE_IDENTITY = "test-node-identity";
 export const TEST_USER_IDENTITY_ID = "test-user-identity";
-export const TEST_USER_MNEMONIC_NAME = "test-user-mnemonic";
-export const TEST_NODE_MNEMONIC_NAME = "test-node-mnemonic";
-export const DEV_TEST_NETWORK = "?network=devnet";
-export const TEST_NETWORK = "?network=testnet";
+export const TEST_MNEMONIC_NAME = "test-mnemonic";
+export const TEST_NETWORK = process.env.TEST_NETWORK;
 export const TEST_FAUCET_ENDPOINT = process.env.TEST_FAUCET_ENDPOINT ?? "";
 export const TEST_CLIENT_OPTIONS = {
 	url: process.env.TEST_NODE_ENDPOINT
@@ -112,13 +111,13 @@ export const NODE_ADDRESS = nodeKeypair.getPublicKey().toIotaAddress();
 
 // Store mnemonics in vault for node identity
 await TEST_VAULT_CONNECTOR.setSecret(
-	`${TEST_NODE_IDENTITY}/${TEST_NODE_MNEMONIC_NAME}`,
+	`${TEST_NODE_IDENTITY}/${TEST_MNEMONIC_NAME}`,
 	process.env.TEST_NODE_MNEMONIC
 );
 
 // Store mnemonics in vault for user identity
 await TEST_VAULT_CONNECTOR.setSecret(
-	`${TEST_USER_IDENTITY_ID}/${TEST_USER_MNEMONIC_NAME}`,
+	`${TEST_USER_IDENTITY_ID}/${TEST_MNEMONIC_NAME}`,
 	process.env.TEST_2_MNEMONIC
 );
 
@@ -128,15 +127,15 @@ await TEST_VAULT_CONNECTOR.setSecret(
 export async function setupTestEnv(): Promise<void> {
 	console.debug(
 		"Test Address",
-		`${process.env.TEST_EXPLORER_URL}address/${TEST_ADDRESS}${DEV_TEST_NETWORK}`
+		`${process.env.TEST_EXPLORER_URL}address/${TEST_ADDRESS}?network=${TEST_NETWORK}`
 	);
 	// Request IOTA from the faucet
 	await requestIotaFromFaucetV0({
-		host: process.env.TEST_FAUCET_ENDPOINT ?? "https://faucet.devnet.iota.cafe",
+		host: TEST_FAUCET_ENDPOINT,
 		recipient: NODE_ADDRESS
 	});
 	await requestIotaFromFaucetV0({
-		host: process.env.TEST_FAUCET_ENDPOINT ?? "https://faucet.devnet.iota.cafe",
+		host: TEST_FAUCET_ENDPOINT,
 		recipient: TEST_ADDRESS
 	});
 }

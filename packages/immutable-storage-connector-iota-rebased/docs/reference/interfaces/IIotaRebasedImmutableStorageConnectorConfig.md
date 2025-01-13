@@ -8,14 +8,6 @@ Configuration interface for IOTA Rebased ImmutableStorageConnector.
 
 ## Properties
 
-### network
-
-> **network**: `string`
-
-The network identifier.
-
-***
-
 ### contractName?
 
 > `optional` **contractName**: `string`

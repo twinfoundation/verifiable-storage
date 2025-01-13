@@ -6,14 +6,11 @@
 // 	TEST_CLIENT_OPTIONS,
 // 	TEST_NODE_IDENTITY,
 // 	TEST_USER_IDENTITY_ID,
-// 	TEST_USER_MNEMONIC_NAME,
-// 	TEST_NETWORK,
-// 	TEST_NODE_MNEMONIC_NAME
+// 	TEST_MNEMONIC_NAME,
+// 	TEST_NETWORK
 // } from "./setupTestEnv";
 // import { IotaRebasedImmutableStorageConnector } from "../src/iotaRebasedImmutableStorageConnector";
 
-// const nodeIdentity = TEST_NODE_IDENTITY;
-// const userIdentity = TEST_USER_IDENTITY_ID;
 // let immutableDeployerConnector: IotaRebasedImmutableStorageConnector;
 // let immutableUserConnector: IotaRebasedImmutableStorageConnector;
 
@@ -31,41 +28,41 @@ describe("IotaRebasedImmutableStorageConnector", () => {
 	// 	immutableDeployerConnector = new IotaRebasedImmutableStorageConnector({
 	// 		config: {
 	// 			clientOptions: TEST_CLIENT_OPTIONS,
-	// 			vaultMnemonicId: TEST_NODE_MNEMONIC_NAME,
+	// 			vaultMnemonicId: TEST_MNEMONIC_NAME,
 	// 			network: TEST_NETWORK,
 	// 			gasBudget: 1_000_000_000
 	// 		}
 	// 	});
 	// 	// Deploy the Move contract
-	// 	await immutableDeployerConnector.start(nodeIdentity);
+	// 	await immutableDeployerConnector.start(TEST_NODE_IDENTITY);
 	// 	// Create connector for user operations
 	// 	immutableUserConnector = new IotaRebasedImmutableStorageConnector({
 	// 		config: {
 	// 			clientOptions: TEST_CLIENT_OPTIONS,
-	// 			vaultMnemonicId: TEST_USER_MNEMONIC_NAME, // user mnemonic
+	// 			vaultMnemonicId: TEST_MNEMONIC_NAME,
 	// 			network: TEST_NETWORK,
 	// 			gasBudget: 1_000_000_000
 	// 		}
 	// 	});
-	// 	await immutableUserConnector.start(userIdentity);
+	// 	await immutableUserConnector.start(TEST_NODE_IDENTITY);
 	// });
 	// test("Cannot store an item before bootstrap", async () => {
 	// 	const unstartedConnector = new IotaRebasedImmutableStorageConnector({
 	// 		config: {
 	// 			clientOptions: TEST_CLIENT_OPTIONS,
-	// 			vaultMnemonicId: TEST_USER_MNEMONIC_NAME,
+	// 			vaultMnemonicId: TEST_MNEMONIC_NAME,
 	// 			network: TEST_NETWORK,
 	// 			gasBudget: 1_000_000_000
 	// 		}
 	// 	});
 	// 	const data = Converter.utf8ToBytes("Test data");
-	// 	await expect(unstartedConnector.store(userIdentity, data)).rejects.toThrow(
+	// 	await expect(unstartedConnector.store(TEST_USER_IDENTITY_ID, data)).rejects.toThrow(
 	// 		"connectorNotStarted"
 	// 	);
 	// });
 	// test("Can store an immutable item", async () => {
 	// 	const data = Converter.utf8ToBytes("Hello, IOTA Rebased Immutable Storage!");
-	// 	const result = await immutableUserConnector.store(userIdentity, data);
+	// 	const result = await immutableUserConnector.store(TEST_USER_IDENTITY_ID, data);
 	// 	const urn = Urn.fromValidString(result.id);
 	// 	expect(urn.namespaceIdentifier()).toEqual("immutable");
 	// 	const specificParts = urn.namespaceSpecificParts();
@@ -76,15 +73,15 @@ describe("IotaRebasedImmutableStorageConnector", () => {
 	// });
 	// test("Can retrieve an immutable item", async () => {
 	// 	const data = Converter.utf8ToBytes("Hello, IOTA Rebased Immutable Storage!");
-	// 	const storeResult = await immutableUserConnector.store(userIdentity, data);
+	// 	const storeResult = await immutableUserConnector.store(TEST_USER_IDENTITY_ID, data);
 	// 	const getResult = await immutableUserConnector.get(storeResult.id);
 	// 	expect(getResult.data).toEqual(data);
 	// 	expect(getResult.receipt.type).toEqual("ImmutableStorageIotaRebasedReceipt");
 	// });
 	// test("Can remove an immutable item", async () => {
 	// 	const data = Converter.utf8ToBytes("Data to be deleted");
-	// 	const storeResult = await immutableUserConnector.store(userIdentity, data);
-	// 	await immutableUserConnector.remove(userIdentity, storeResult.id);
+	// 	const storeResult = await immutableUserConnector.store(TEST_USER_IDENTITY_ID, data);
+	// 	await immutableUserConnector.remove(TEST_USER_IDENTITY_ID, storeResult.id);
 	// 	await expect(immutableUserConnector.get(storeResult.id)).rejects.toThrow("objectNotFound");
 	// });
 });
