@@ -20,7 +20,8 @@ jobs:
           [
             immutable-storage-models,
             immutable-storage-connector-iota,
-            immutable-storage-connector-entity-storage
+            immutable-storage-connector-entity-storage,
+            immutable-storage-connector-iota-rebased
           ]
 
     steps:
@@ -49,6 +50,14 @@ jobs:
             echo "Error: package version does not contain -next"
             exit 1
           fi
+
+      - name: Download IOTA CLI
+        run: |
+          wget https://github.com/iotaledger/iota/releases/download/v0.8.1-beta/iota-v0.8.1-beta-linux-x86_64.tgz -O iota-cli.tgz
+          tar xzf iota-cli.tgz
+          chmod +x iota
+          sudo mv iota /usr/local/bin/iota
+          iota --version
 
       - name: Run Dist
         run: |
