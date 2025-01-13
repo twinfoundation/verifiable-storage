@@ -23,6 +23,7 @@ import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import type { IImmutableStorageIotaReceipt } from "./models/IImmutableIotaStorageReceipt";
 import type { IIotaImmutableStorageConnectorConfig } from "./models/IIotaImmutableStorageConnectorConfig";
+import type { IIotaImmutableStorageConnectorConstructorOptions } from "./models/IIotaImmutableStorageConnectorConstructorOptions";
 import { IotaImmutableStorageTypes } from "./models/iotaImmutableStorageTypes";
 
 /**
@@ -54,13 +55,8 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 	/**
 	 * Create a new instance of IotaImmutableStorageConnector.
 	 * @param options The options for the connector.
-	 * @param options.vaultConnectorType The type of the vault connector, defaults to "vault".
-	 * @param options.config The configuration for the connector.
 	 */
-	constructor(options: {
-		vaultConnectorType?: string;
-		config: IIotaImmutableStorageConnectorConfig;
-	}) {
+	constructor(options: IIotaImmutableStorageConnectorConstructorOptions) {
 		Guards.object(this.CLASS_NAME, nameof(options), options);
 		Guards.object<IIotaImmutableStorageConnectorConfig>(
 			this.CLASS_NAME,

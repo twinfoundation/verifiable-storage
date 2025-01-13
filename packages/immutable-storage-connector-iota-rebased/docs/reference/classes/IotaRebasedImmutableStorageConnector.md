@@ -16,7 +16,9 @@ Create a new instance of IotaRebasedImmutableStorageConnector.
 
 #### Parameters
 
-• **options**: [`IIotaRebasedImmutableStorageConnectorConstructorOptions`](../interfaces/IIotaRebasedImmutableStorageConnectorConstructorOptions.md)
+##### options
+
+[`IIotaRebasedImmutableStorageConnectorConstructorOptions`](../interfaces/IIotaRebasedImmutableStorageConnectorConstructorOptions.md)
 
 The options for the storage connector.
 
@@ -54,15 +56,19 @@ Bootstrap the Immutable Storage contract.
 
 #### Parameters
 
-• **nodeIdentity**: `string`
+##### nodeIdentity
+
+`string`
 
 The identity of the node.
 
-• **nodeLoggingConnectorType?**: `string`
+##### nodeLoggingConnectorType?
+
+`string`
 
 The node logging connector type, defaults to "node-logging".
 
-• **componentState?**
+##### componentState?
 
 #### Returns
 
@@ -78,33 +84,29 @@ True if the bootstrapping process was successful.
 
 ### store()
 
-> **store**(`controller`, `data`): `Promise`\<`object`\>
+> **store**(`controller`, `data`): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 Store an item in immutable storage.
 
 #### Parameters
 
-• **controller**: `string`
+##### controller
+
+`string`
 
 The identity of the user to access the vault keys.
 
-• **data**: `Uint8Array`
+##### data
+
+`Uint8Array`
 
 The data to store.
 
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 The id of the stored immutable item in URN format and the receipt.
-
-##### id
-
-> **id**: `string`
-
-##### receipt
-
-> **receipt**: `IJsonLdNodeObject`
 
 #### Implementation of
 
@@ -114,37 +116,33 @@ The id of the stored immutable item in URN format and the receipt.
 
 ### get()
 
-> **get**(`id`, `options`?): `Promise`\<`object`\>
+> **get**(`id`, `options`?): `Promise`\<\{ `data`: `Uint8Array`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 Get an immutable item.
 
 #### Parameters
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the item to get.
 
-• **options?**
+##### options?
 
 Additional options for getting the item.
 
-• **options.includeData?**: `boolean`
+###### includeData
+
+`boolean`
 
 Should the data be included in the response, defaults to true.
 
 #### Returns
 
-`Promise`\<`object`\>
+`Promise`\<\{ `data`: `Uint8Array`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 The data for the item and the receipt.
-
-##### data?
-
-> `optional` **data**: `Uint8Array`
-
-##### receipt
-
-> **receipt**: `IJsonLdNodeObject`
 
 #### Implementation of
 
@@ -160,11 +158,15 @@ Remove the item from immutable storage.
 
 #### Parameters
 
-• **controller**: `string`
+##### controller
+
+`string`
 
 The identity of the user to access the vault keys.
 
-• **id**: `string`
+##### id
+
+`string`
 
 The id of the immutable item to remove in URN format.
 
