@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/immutable-storage-connector-iota-rebased",
-	"version": "0.0.1-next.16",
+	"version": "0.0.1-next.17",
 	"description": "Implementation of the Immutable Storage connector using IOTA Rebased",
 	"repository": {
 		"type": "git",
