@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
 import { requestIotaFromFaucetV0 } from "@iota/iota-sdk/faucet";
-import { Ed25519Keypair } from "@iota/iota-sdk/keypairs/ed25519";
 import { Guards, Is } from "@twin.org/core";
-import { Bip39, Bip44, KeyType } from "@twin.org/crypto";
+import { Bip39 } from "@twin.org/crypto";
+import { IotaRebased } from "@twin.org/dlt-iota-rebased";
 import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
 import { EntityStorageConnectorFactory } from "@twin.org/entity-storage-models";
 import { nameof } from "@twin.org/nameof";
@@ -37,16 +37,6 @@ if (!Is.stringValue(process.env.TEST_MNEMONIC)) {
 	);
 }
 
-if (!Is.stringValue(process.env.TEST_2_MNEMONIC)) {
-	// eslint-disable-next-line no-restricted-syntax
-	throw new Error(
-		`Please define TEST_2_MNEMONIC as a 24 word mnemonic either as an environment variable or inside an .env.dev file
-         e.g. TEST_2_MNEMONIC="word0 word1 ... word23"
-         You can generate one using the following command
-         npx "@twin.org/crypto-cli" mnemonic --env ./tests/.env.dev --env-prefix TEST_2_ --merge-env`
-	);
-}
-
 if (!Is.stringValue(process.env.TEST_NODE_MNEMONIC)) {
 	// eslint-disable-next-line no-restricted-syntax
 	throw new Error(
@@ -67,9 +57,8 @@ export const TEST_CLIENT_OPTIONS = {
 };
 
 export const TEST_SEED = Bip39.mnemonicToSeed(process.env.TEST_MNEMONIC);
-export const TEST_2_SEED = Bip39.mnemonicToSeed(process.env.TEST_2_MNEMONIC);
 export const TEST_NODE_SEED = Bip39.mnemonicToSeed(process.env.TEST_NODE_MNEMONIC);
-export const TEST_COIN_TYPE = Number.parseInt(process.env.TEST_COIN_TYPE ?? "784", 10);
+export const TEST_COIN_TYPE = Number.parseInt(process.env.TEST_COIN_TYPE, 10);
 
 // Initialize schema for entity storage
 initSchema();
@@ -92,22 +81,22 @@ EntityStorageConnectorFactory.register("vault-secret", () => secretEntityStorage
 export const TEST_VAULT_CONNECTOR = new EntityStorageVaultConnector();
 VaultConnectorFactory.register("vault", () => TEST_VAULT_CONNECTOR);
 
-// Generate test address
-const bip44KeyPair = Bip44.keyPair(TEST_2_SEED, KeyType.Ed25519, TEST_COIN_TYPE, 0, false, 0);
-const keypair = Ed25519Keypair.fromSecretKey(bip44KeyPair.privateKey);
-export const TEST_ADDRESS = keypair.getPublicKey().toIotaAddress();
-
-// Generate node address
-const nodeBip44KeyPair = Bip44.keyPair(
-	TEST_NODE_SEED,
-	KeyType.Ed25519,
+const testAddresses = IotaRebased.getAddresses(
+	Bip39.mnemonicToSeed(process.env.TEST_MNEMONIC),
 	TEST_COIN_TYPE,
 	0,
-	false,
-	0
+	0,
+	1
 );
-const nodeKeypair = Ed25519Keypair.fromSecretKey(nodeBip44KeyPair.privateKey);
-export const NODE_ADDRESS = nodeKeypair.getPublicKey().toIotaAddress();
+const nodeAddresses = IotaRebased.getAddresses(
+	Bip39.mnemonicToSeed(process.env.TEST_NODE_MNEMONIC),
+	TEST_COIN_TYPE,
+	0,
+	0,
+	1
+);
+export const TEST_ADDRESS = testAddresses[0];
+export const NODE_ADDRESS = nodeAddresses[0];
 
 // Store mnemonics in vault for node identity
 await TEST_VAULT_CONNECTOR.setSecret(
@@ -118,7 +107,7 @@ await TEST_VAULT_CONNECTOR.setSecret(
 // Store mnemonics in vault for user identity
 await TEST_VAULT_CONNECTOR.setSecret(
 	`${TEST_USER_IDENTITY_ID}/${TEST_MNEMONIC_NAME}`,
-	process.env.TEST_2_MNEMONIC
+	process.env.TEST_MNEMONIC
 );
 
 /**
