@@ -19,10 +19,10 @@ jobs:
       matrix:
         package:
           [
-            immutable-storage-models,
-            immutable-storage-connector-iota,
-            immutable-storage-connector-entity-storage,
-            immutable-storage-connector-iota-rebased
+            'packages/immutable-storage-models',
+            'packages/immutable-storage-connector-iota',
+            'packages/immutable-storage-connector-entity-storage',
+            'packages/immutable-storage-connector-iota-rebased'
           ]
 
     steps:
@@ -44,7 +44,7 @@ jobs:
 
       - name: Check package version does not contains -next
         run: |
-          cd packages/${{ matrix.package }}
+          cd ${{ matrix.package }}
           PACKAGE_VERSION=$(cat package.json | jq '.version' | tr -d '"')
           echo Package Version $PACKAGE_VERSION
           if [[ $PACKAGE_VERSION == *"-next"* ]]; then
@@ -62,19 +62,19 @@ jobs:
 
       - name: Run Dist
         run: |
-          cd packages/${{ matrix.package }}
+          cd ${{ matrix.package }}
           npm install
           npm run dist
 
       - name: Cleanup package properties
         run: |
-          cd packages/${{ matrix.package }}
+          cd ${{ matrix.package }}
           npm pkg delete scripts
           npm pkg delete devDependencies
 
       - name: Publish
         run: |
-          cd packages/${{ matrix.package }}
+          cd ${{ matrix.package }}
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
