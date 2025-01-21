@@ -22,6 +22,9 @@
 			"deployTransactionFailed": "Deploying the contract failed with error: \"{error}\"",
 			"startFailed": "Failed to start the IOTA Rebased Immutable Storage connector.",
 			"invalidGasBudget": "The gas budget must be greater than 0"
+		},
+		"iotaRebasedImmutableStorageUtils": {
+			"invalidImmutableStorageIdFormat": "The immutable storage ID \"{id}\" has an invalid format"
 		}
 	}
 }

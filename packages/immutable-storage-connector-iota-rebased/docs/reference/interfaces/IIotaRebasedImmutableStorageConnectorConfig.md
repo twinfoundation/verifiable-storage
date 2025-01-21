@@ -50,18 +50,14 @@ The wallet address index to use when deriving addresses.
 
 ***
 
-### vaultMnemonicId?
+### packageControllerAddressIndex?
 
-> `optional` **vaultMnemonicId**: `string`
+> `optional` **packageControllerAddressIndex**: `number`
 
-The vault mnemonic identifier.
+The package controller address index to use when creating package.
 
 #### Default
 
 ```ts
-"mnemonic"
+0
 ```
-
-#### Overrides
-
-`IIotaRebasedConfig.vaultMnemonicId`

@@ -13,6 +13,7 @@ import { LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import compiledModulesJson from "./contracts/compiledModules/compiled-modules.json";
+import { IotaRebasedImmutableStorageUtils } from "./iotaRebasedImmutableStorageUtils";
 import type { IIotaRebasedImmutableStorageConnectorConfig } from "./models/IIotaRebasedImmutableStorageConnectorConfig";
 import type { IIotaRebasedImmutableStorageConnectorConstructorOptions } from "./models/IIotaRebasedImmutableStorageConnectorConstructorOptions";
 import { IotaRebasedImmutableStorageTypes } from "./models/iotaRebasedImmutableStorageTypes";
@@ -177,7 +178,7 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				dependencies: ["0x1", "0x2"]
 			});
 
-			const controllerAddress = await this.getControllerAddress(nodeIdentity);
+			const controllerAddress = await this.getPackageControllerAddress(nodeIdentity);
 
 			// Transfer the upgrade capability to the controller
 			txb.transferObjects([upgradeCap], txb.pure.address(controllerAddress));
@@ -188,6 +189,7 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				nodeIdentity,
 				this._client,
 				{
+					owner: controllerAddress,
 					transaction: txb,
 					showEffects: true,
 					showEvents: true,
@@ -272,12 +274,22 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				arguments: [txb.pure.string(Converter.bytesToHex(data))]
 			});
 
+			const seed = await IotaRebased.getSeed(this._config, this._vaultConnector, controller);
+			const addresses = IotaRebased.getAddresses(
+				seed,
+				this._config.coinType ?? IotaRebased.DEFAULT_COIN_TYPE,
+				0,
+				this._config.walletAddressIndex ?? 0,
+				1
+			);
+
 			const result = await IotaRebased.prepareAndPostStorageTransaction(
 				this._config,
 				this._vaultConnector,
 				controller,
 				this._client,
 				{
+					owner: addresses[0],
 					transaction: txb,
 					showEffects: true,
 					showEvents: true,
@@ -314,7 +326,7 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 
 			const urn = new Urn(
 				"immutable",
-				`${IotaRebasedImmutableStorageConnector.NAMESPACE}:${objectId}`
+				`${IotaRebasedImmutableStorageConnector.NAMESPACE}:${this._config.network}:${this._packageId}:${objectId}`
 			);
 
 			return {
@@ -348,7 +360,7 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		const includeData = options?.includeData ?? true;
-		const objectId = this.extractObjectId(id);
+		const objectId = IotaRebasedImmutableStorageUtils.immutableStorageIdToObjectId(id);
 
 		try {
 			const objectData = await this._client.getObject({
@@ -410,7 +422,6 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 	 * @returns A promise that resolves when the item is removed.
 	 */
 	public async remove(controller: string, id: string): Promise<void> {
-		this.ensureStarted();
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
@@ -427,10 +438,18 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 			const txb = new Transaction();
 			txb.setGasBudget(this._gasBudget);
 
-			const objectId = this.extractObjectId(id);
-
-			const packageId = this._packageId;
+			const objectId = IotaRebasedImmutableStorageUtils.immutableStorageIdToObjectId(id);
+			const packageId = IotaRebasedImmutableStorageUtils.immutableStorageIdToPackageId(id);
 			const moduleName = this.getModuleName();
+
+			const seed = await IotaRebased.getSeed(this._config, this._vaultConnector, controller);
+			const addresses = IotaRebased.getAddresses(
+				seed,
+				this._config.coinType ?? IotaRebased.DEFAULT_COIN_TYPE,
+				0,
+				this._config.walletAddressIndex ?? 0,
+				1
+			);
 
 			txb.moveCall({
 				target: `${packageId}::${moduleName}::delete_data`,
@@ -443,6 +462,7 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				controller,
 				this._client,
 				{
+					owner: addresses[0],
 					transaction: txb,
 					showEffects: true,
 					showEvents: true,
@@ -466,14 +486,14 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 	}
 
 	/**
-	 * Get the controller's address.
+	 * Get the package controller's address.
 	 * @param identity The identity of the user to access the vault keys.
 	 * @returns The controller's address.
 	 * @internal
 	 */
-	private async getControllerAddress(identity: string): Promise<string> {
+	private async getPackageControllerAddress(identity: string): Promise<string> {
 		const seed = await IotaRebased.getSeed(this._config, this._vaultConnector, identity);
-		const walletAddressIndex = this._config.walletAddressIndex ?? 0;
+		const walletAddressIndex = this._config.packageControllerAddressIndex ?? 0;
 		const addresses = IotaRebased.getAddresses(
 			seed,
 			this._config.coinType ?? IotaRebased.DEFAULT_COIN_TYPE,
@@ -484,23 +504,6 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 		);
 
 		return addresses[0];
-	}
-
-	/**
-	 * Extract the object ID from an immutable storage URN.
-	 * @param id The immutable storage URN.
-	 * @returns The object ID.
-	 * @internal
-	 */
-	private extractObjectId(id: string): string {
-		const urn = Urn.fromValidString(id);
-		const parts = urn.namespaceSpecificParts();
-		if (parts.length !== 2) {
-			throw new GeneralError(this.CLASS_NAME, "invalidIdFormat", {
-				id
-			});
-		}
-		return parts[1];
 	}
 
 	/**

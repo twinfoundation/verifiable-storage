@@ -25,8 +25,8 @@ export interface IIotaRebasedImmutableStorageConnectorConfig extends IIotaRebase
 	walletAddressIndex?: number;
 
 	/**
-	 * The vault mnemonic identifier.
-	 * @default "mnemonic"
+	 * The package controller address index to use when creating package.
+	 * @default 0
 	 */
-	vaultMnemonicId?: string;
+	packageControllerAddressIndex?: number;
 }
