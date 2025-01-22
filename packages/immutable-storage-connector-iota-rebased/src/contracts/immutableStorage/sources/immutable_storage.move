@@ -10,8 +10,7 @@ module 0x0::immutable_storage {
         data: String,
         timestamp: u64,
         version: u8,
-        creator: address,
-        // is_deleted: bool
+        creator: address
     }
 
     struct StorageCreated has copy, drop {
@@ -30,8 +29,7 @@ module 0x0::immutable_storage {
             data: string::utf8(data),
             timestamp,
             version: 1,
-            creator: sender,
-            // is_deleted: false
+            creator: sender
         };
 
         // optionally emit an event
@@ -44,20 +42,6 @@ module 0x0::immutable_storage {
 
         transfer::transfer(storage, sender);
     }
-
-    // public entry fun delete_data(
-    //     storage: &mut StorageItem,
-    //     ctx: &mut TxContext
-    // ) {
-    //     let sender = tx_context::sender(ctx);
-    //     assert!(
-    //         sender == storage.creator,
-    //         E_NOT_AUTHORIZED
-    //     );
-
-    //     // Mark as deleted
-    //     storage.is_deleted = true;
-    // }
 
     /// Permanently delete the StorageItem
     public entry fun delete_data(

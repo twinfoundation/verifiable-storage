@@ -61,3 +61,17 @@ The package controller address index to use when creating package.
 ```ts
 0
 ```
+
+***
+
+### enableCostLogging?
+
+> `optional` **enableCostLogging**: `boolean`
+
+Enable cost logging.
+
+#### Default
+
+```ts
+false
+```

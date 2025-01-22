@@ -9,7 +9,7 @@ import {
 	ImmutableStorageTypes,
 	type IImmutableStorageConnector
 } from "@twin.org/immutable-storage-models";
-import { LoggingConnectorFactory } from "@twin.org/logging-models";
+import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import compiledModulesJson from "./contracts/compiledModules/compiled-modules.json";
@@ -69,6 +69,12 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 	private _packageId: string | undefined;
 
 	/**
+	 * The logger for the background task connector.
+	 * @internal
+	 */
+	private readonly _logging?: ILoggingConnector;
+
+	/**
 	 * Create a new instance of IotaRebasedImmutableStorageConnector.
 	 * @param options The options for the storage connector.
 	 */
@@ -81,6 +87,8 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 		);
 		Guards.stringValue(this.CLASS_NAME, nameof(options.config.network), options.config.network);
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
+
+		this._logging = LoggingConnectorFactory.getIfExists(options?.loggingConnectorType ?? "logging");
 
 		this._config = options.config;
 
@@ -183,6 +191,11 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 			// Transfer the upgrade capability to the controller
 			txb.transferObjects([upgradeCap], txb.pure.address(controllerAddress));
 
+			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
+			if (this._config.enableCostLogging) {
+				await this.dryRunTransaction(txb, nodeIdentity, "deploy");
+			}
+
 			const result = await IotaRebased.prepareAndPostStorageTransaction(
 				this._config,
 				this._vaultConnector,
@@ -283,6 +296,11 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				1
 			);
 
+			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
+			if (this._config.enableCostLogging) {
+				await this.dryRunTransaction(txb, controller, "store");
+			}
+
 			const result = await IotaRebased.prepareAndPostStorageTransaction(
 				this._config,
 				this._vaultConnector,
@@ -334,6 +352,8 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				receipt: receipt as IJsonLdNodeObject
 			};
 		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.log(error);
 			throw new GeneralError(
 				this.CLASS_NAME,
 				"storingFailed",
@@ -456,6 +476,11 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				arguments: [txb.object(objectId)]
 			});
 
+			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
+			if (this._config.enableCostLogging) {
+				await this.dryRunTransaction(txb, controller, "remove");
+			}
+
 			const result = await IotaRebased.prepareAndPostNftTransaction(
 				this._config,
 				this._vaultConnector,
@@ -476,6 +501,8 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				});
 			}
 		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.log(error);
 			throw new GeneralError(
 				this.CLASS_NAME,
 				"removingFailed",
@@ -526,5 +553,67 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 	 */
 	private getModuleName(): string {
 		return StringHelper.snakeCase(this._contractName);
+	}
+
+	/**
+	 * Dry run a transaction.
+	 * @param txb The transaction to dry run.
+	 * @param controller The controller of the transaction.
+	 * @param operation The operation to log.
+	 * @returns void.
+	 */
+	private async dryRunTransaction(
+		txb: Transaction,
+		controller: string,
+		operation: string
+	): Promise<void> {
+		try {
+			const controllerAddress = await this.getPackageControllerAddress(controller);
+
+			txb.setSender(controllerAddress);
+
+			const builtTx = await txb.build({
+				client: this._client,
+				onlyTransactionKind: false
+			});
+
+			const dryRunResult = await this._client.dryRunTransactionBlock({
+				transactionBlock: builtTx
+			});
+
+			if (dryRunResult.effects) {
+				await this._logging?.log({
+					level: "info",
+					source: this.CLASS_NAME,
+					ts: Date.now(),
+					message: "transactionCosts",
+					data: {
+						operation,
+						status: dryRunResult.effects.status,
+						costs: {
+							computationCost: dryRunResult.effects.gasUsed.computationCost,
+							computationCostBurned: dryRunResult.effects.gasUsed.computationCostBurned,
+							storageCost: dryRunResult.effects.gasUsed.storageCost,
+							storageRebate: dryRunResult.effects.gasUsed.storageRebate,
+							nonRefundableStorageFee: dryRunResult.effects.gasUsed.nonRefundableStorageFee
+						},
+						events: dryRunResult.events,
+						balanceChanges: dryRunResult.balanceChanges,
+						objectChanges: dryRunResult.objectChanges
+					}
+				});
+			}
+		} catch (error) {
+			await this._logging?.log({
+				level: "error",
+				source: this.CLASS_NAME,
+				ts: Date.now(),
+				message: "dryRunFailed",
+				error: BaseError.fromError(error),
+				data: {
+					operation
+				}
+			});
+		}
 	}
 }

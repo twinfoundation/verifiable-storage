@@ -116,6 +116,9 @@ describe("IotaRebasedImmutableStorageConnector", () => {
 	test("Can remove an immutable item", async () => {
 		const data = Converter.utf8ToBytes("Data to be deleted");
 		const storeResult = await immutableUserConnector.store(TEST_USER_IDENTITY_ID, data);
+		await waitForResolution(storeResult.id);
+		const getResult = await immutableUserConnector.get(storeResult.id);
+		expect(getResult.data).toEqual(data);
 		await immutableUserConnector.remove(TEST_USER_IDENTITY_ID, storeResult.id);
 		await waitForFailedResolution(storeResult.id);
 		await expect(immutableUserConnector.get(storeResult.id)).rejects.toThrow("objectNotFound");
