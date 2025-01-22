@@ -352,8 +352,6 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				receipt: receipt as IJsonLdNodeObject
 			};
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log(error);
 			throw new GeneralError(
 				this.CLASS_NAME,
 				"storingFailed",
@@ -501,8 +499,6 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				});
 			}
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.log(error);
 			throw new GeneralError(
 				this.CLASS_NAME,
 				"removingFailed",
