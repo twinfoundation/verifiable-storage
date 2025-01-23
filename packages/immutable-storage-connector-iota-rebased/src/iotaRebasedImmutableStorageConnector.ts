@@ -69,7 +69,7 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 	private _packageId: string | undefined;
 
 	/**
-	 * The logger for the background task connector.
+	 * The logging connector.
 	 * @internal
 	 */
 	private readonly _logging?: ILoggingConnector;
@@ -563,53 +563,14 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 		controller: string,
 		operation: string
 	): Promise<void> {
-		try {
-			const controllerAddress = await this.getPackageControllerAddress(controller);
-
-			txb.setSender(controllerAddress);
-
-			const builtTx = await txb.build({
-				client: this._client,
-				onlyTransactionKind: false
-			});
-
-			const dryRunResult = await this._client.dryRunTransactionBlock({
-				transactionBlock: builtTx
-			});
-
-			if (dryRunResult.effects) {
-				await this._logging?.log({
-					level: "info",
-					source: this.CLASS_NAME,
-					ts: Date.now(),
-					message: "transactionCosts",
-					data: {
-						operation,
-						status: dryRunResult.effects.status,
-						costs: {
-							computationCost: dryRunResult.effects.gasUsed.computationCost,
-							computationCostBurned: dryRunResult.effects.gasUsed.computationCostBurned,
-							storageCost: dryRunResult.effects.gasUsed.storageCost,
-							storageRebate: dryRunResult.effects.gasUsed.storageRebate,
-							nonRefundableStorageFee: dryRunResult.effects.gasUsed.nonRefundableStorageFee
-						},
-						events: dryRunResult.events,
-						balanceChanges: dryRunResult.balanceChanges,
-						objectChanges: dryRunResult.objectChanges
-					}
-				});
-			}
-		} catch (error) {
-			await this._logging?.log({
-				level: "error",
-				source: this.CLASS_NAME,
-				ts: Date.now(),
-				message: "dryRunFailed",
-				error: BaseError.fromError(error),
-				data: {
-					operation
-				}
-			});
-		}
+		const controllerAddress = await this.getPackageControllerAddress(controller);
+		await IotaRebased.dryRunTransactionAndLog(
+			this._client,
+			this._logging,
+			this.CLASS_NAME,
+			txb,
+			controllerAddress,
+			operation
+		);
 	}
 }

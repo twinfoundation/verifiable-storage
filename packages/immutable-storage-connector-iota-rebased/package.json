@@ -41,7 +41,6 @@
 		"@twin.org/logging-models": "next",
 		"@twin.org/nameof": "next",
 		"@twin.org/vault-models": "next",
-		"@twin.org/wallet-connector-iota-rebased": "next",
 		"@twin.org/wallet-models": "next"
 	},
 	"devDependencies": {
