@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/immutable-storage-connector-iota-rebased",
-	"version": "0.0.1-next.19",
+	"version": "0.0.1-next.20",
 	"description": "Implementation of the Immutable Storage connector using IOTA Rebased",
 	"repository": {
 		"type": "git",
@@ -16,7 +16,7 @@
 	"scripts": {
 		"clean": "rimraf dist coverage",
 		"build:schema": "ts-to-schema ./ts-to-schema.json ./src/schemas",
-		"build:contracts": "cd src/contracts/immutableStorage && iota move build && node ../../../scripts/compileModules.mjs",
+		"build:contracts": "move-to-json \"src/contracts/**/*.move\" src/contracts/compiledModules/compiled-modules.json --platform iota",
 		"build:compile": "tsc",
 		"build": "npm run build:schema && npm run build:compile && npm run build:contracts",
 		"build:watch": "tsc-watch --onSuccess \"npm run bundle:esm\"",
@@ -36,13 +36,12 @@
 		"@twin.org/core": "next",
 		"@twin.org/crypto": "next",
 		"@twin.org/data-json-ld": "next",
+		"@twin.org/dlt-iota-rebased": "next",
 		"@twin.org/immutable-storage-models": "next",
 		"@twin.org/logging-models": "next",
 		"@twin.org/nameof": "next",
 		"@twin.org/vault-models": "next",
-		"@twin.org/wallet-models": "next",
-		"@twin.org/dlt-iota-rebased": "next",
-		"@twin.org/wallet-connector-iota-rebased": "next"
+		"@twin.org/wallet-models": "next"
 	},
 	"devDependencies": {
 		"@rollup/plugin-json": "^6.1.0",
@@ -50,6 +49,7 @@
 		"@twin.org/entity-storage-connector-memory": "next",
 		"@twin.org/nameof-transformer": "next",
 		"@twin.org/nameof-vitest-plugin": "next",
+		"@twin.org/move-to-json": "next",
 		"@twin.org/ts-to-schema": "next",
 		"@twin.org/vault-connector-entity-storage": "next",
 		"@types/node": "^22.10.7",

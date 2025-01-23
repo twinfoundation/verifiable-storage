@@ -16,4 +16,10 @@ export interface IIotaRebasedImmutableStorageConnectorConstructorOptions {
 	 * @default "vault"
 	 */
 	vaultConnectorType?: string;
+
+	/**
+	 * The logging connector type.
+	 * @default logging
+	 */
+	loggingConnectorType?: string;
 }

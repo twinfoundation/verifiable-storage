@@ -4,12 +4,12 @@ import type { IotaClient } from "@iota/iota-sdk/client";
 import { Transaction } from "@iota/iota-sdk/transactions";
 import { BaseError, Converter, GeneralError, Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import { IotaRebased } from "@twin.org/dlt-iota-rebased";
+import { IotaRebased, type IIotaDryRun } from "@twin.org/dlt-iota-rebased";
 import {
 	ImmutableStorageTypes,
 	type IImmutableStorageConnector
 } from "@twin.org/immutable-storage-models";
-import { LoggingConnectorFactory } from "@twin.org/logging-models";
+import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import compiledModulesJson from "./contracts/compiledModules/compiled-modules.json";
@@ -69,6 +69,12 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 	private _packageId: string | undefined;
 
 	/**
+	 * The logging connector.
+	 * @internal
+	 */
+	private readonly _logging?: ILoggingConnector;
+
+	/**
 	 * Create a new instance of IotaRebasedImmutableStorageConnector.
 	 * @param options The options for the storage connector.
 	 */
@@ -81,6 +87,8 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 		);
 		Guards.stringValue(this.CLASS_NAME, nameof(options.config.network), options.config.network);
 		this._vaultConnector = VaultConnectorFactory.get(options?.vaultConnectorType ?? "vault");
+
+		this._logging = LoggingConnectorFactory.getIfExists(options?.loggingConnectorType ?? "logging");
 
 		this._config = options.config;
 
@@ -183,6 +191,11 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 			// Transfer the upgrade capability to the controller
 			txb.transferObjects([upgradeCap], txb.pure.address(controllerAddress));
 
+			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
+			if (this._config.enableCostLogging) {
+				await this.dryRunTransaction(txb, nodeIdentity, "deploy");
+			}
+
 			const result = await IotaRebased.prepareAndPostStorageTransaction(
 				this._config,
 				this._vaultConnector,
@@ -282,6 +295,11 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				this._config.walletAddressIndex ?? 0,
 				1
 			);
+
+			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
+			if (this._config.enableCostLogging) {
+				await this.dryRunTransaction(txb, controller, "store");
+			}
 
 			const result = await IotaRebased.prepareAndPostStorageTransaction(
 				this._config,
@@ -456,6 +474,11 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 				arguments: [txb.object(objectId)]
 			});
 
+			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
+			if (this._config.enableCostLogging) {
+				await this.dryRunTransaction(txb, controller, "remove");
+			}
+
 			const result = await IotaRebased.prepareAndPostNftTransaction(
 				this._config,
 				this._vaultConnector,
@@ -526,5 +549,30 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 	 */
 	private getModuleName(): string {
 		return StringHelper.snakeCase(this._contractName);
+	}
+
+	/**
+	 * Dry run a transaction.
+	 * @param txb The transaction to dry run.
+	 * @param controller The controller of the transaction.
+	 * @param operation The operation to log.
+	 * @returns void.
+	 */
+	private async dryRunTransaction(
+		txb: Transaction,
+		controller: string,
+		operation: string
+	): Promise<IIotaDryRun> {
+		const controllerAddress = await this.getPackageControllerAddress(controller);
+		const dryRunResponse = await IotaRebased.dryRunTransaction(
+			this._client,
+			this._logging,
+			this.CLASS_NAME,
+			txb,
+			controllerAddress,
+			operation
+		);
+
+		return dryRunResponse;
 	}
 }
