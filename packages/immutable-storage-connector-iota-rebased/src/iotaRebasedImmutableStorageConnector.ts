@@ -4,7 +4,7 @@ import type { IotaClient } from "@iota/iota-sdk/client";
 import { Transaction } from "@iota/iota-sdk/transactions";
 import { BaseError, Converter, GeneralError, Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import { IotaRebased } from "@twin.org/dlt-iota-rebased";
+import { IotaRebased, type IIotaDryRunResponse } from "@twin.org/dlt-iota-rebased";
 import {
 	ImmutableStorageTypes,
 	type IImmutableStorageConnector
@@ -562,9 +562,9 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 		txb: Transaction,
 		controller: string,
 		operation: string
-	): Promise<void> {
+	): Promise<IIotaDryRunResponse> {
 		const controllerAddress = await this.getPackageControllerAddress(controller);
-		await IotaRebased.dryRunTransactionAndLog(
+		const dryRunResponse = await IotaRebased.dryRunTransaction(
 			this._client,
 			this._logging,
 			this.CLASS_NAME,
@@ -572,5 +572,7 @@ export class IotaRebasedImmutableStorageConnector implements IImmutableStorageCo
 			controllerAddress,
 			operation
 		);
+
+		return dryRunResponse;
 	}
 }
