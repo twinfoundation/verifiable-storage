@@ -20,9 +20,9 @@ jobs:
         package:
           [
             'packages/immutable-storage-models',
-            'packages/immutable-storage-connector-iota',
             'packages/immutable-storage-connector-entity-storage',
-            'packages/immutable-storage-connector-iota-rebased'
+            'packages/immutable-storage-connector-iota',
+            'packages/immutable-storage-connector-iota-stardust'
           ]
 
     steps:

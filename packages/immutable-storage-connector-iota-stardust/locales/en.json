@@ -1,0 +1,13 @@
+{
+	"error": {
+		"iotaStardustImmutableStorageConnector": {
+			"inclusionFailed": "The transaction generated for the immutable storage was not included in a reasonable amount of time",
+			"storingFailed": "Storing the immutable item failed",
+			"gettingFailed": "Getting the immutable item failed",
+			"removingFailed": "Removing the immutable item failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\"",
+			"insufficientFunds": "There were insufficient funds to complete the operation",
+			"walletConnectorMissing": "The wallet connector must be available to perform this operation"
+		}
+	}
+}

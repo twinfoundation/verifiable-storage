@@ -3,17 +3,23 @@
 import type { IIotaImmutableStorageConnectorConfig } from "./IIotaImmutableStorageConnectorConfig";
 
 /**
- * Options for the IOTA Immutable Storage connector.
+ * Options for the IotaImmutableStorageConnector.
  */
 export interface IIotaImmutableStorageConnectorConstructorOptions {
 	/**
-	 * The type of the vault connector.
-	 * @default vault
+	 * The configuration to use for the connector.
+	 */
+	config: IIotaImmutableStorageConnectorConfig;
+
+	/**
+	 * The vault connector type to use.
+	 * @default "vault"
 	 */
 	vaultConnectorType?: string;
 
 	/**
-	 * The configuration for the connector.
+	 * The logging connector type.
+	 * @default logging
 	 */
-	config: IIotaImmutableStorageConnectorConfig;
+	loggingConnectorType?: string;
 }

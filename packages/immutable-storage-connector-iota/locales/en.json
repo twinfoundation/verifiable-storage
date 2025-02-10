@@ -1,13 +1,30 @@
 {
+	"info": {
+		"iotaImmutableStorageConnector": {
+			"contractAlreadyDeployed": "Contract already deployed",
+			"contractDeploymentStarted": "Contract deployment started",
+			"contractDeploymentCompleted": "Contract deployment completed"
+		}
+	},
 	"error": {
 		"iotaImmutableStorageConnector": {
-			"inclusionFailed": "The transaction generated for the immutable storage was not included in a reasonable amount of time",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\"",
 			"storingFailed": "Storing the immutable item failed",
 			"gettingFailed": "Getting the immutable item failed",
 			"removingFailed": "Removing the immutable item failed",
-			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\"",
-			"insufficientFunds": "There were insufficient funds to complete the operation",
-			"walletConnectorMissing": "The wallet connector must be available to perform this operation"
+			"packageIdNotFound": "The package ID \"{id}\" was not found",
+			"storingTransactionFailed": "The transaction to store the data failed",
+			"removingTransactionFailed": "The transaction to remove the data failed",
+			"objectNotFound": "The object was not found",
+			"notAuthorized": "The controller address \"{controllerAddress}\" does not match the creator \"{creator}\" of the object",
+			"invalidIdFormat": "The immutable storage URN \"{id}\" has an invalid format",
+			"connectorNotStarted": "Please call start() before using this connector. Package ID: \"{packageId}\" is missing.",
+			"deployTransactionFailed": "Deploying the contract failed with error: \"{error}\"",
+			"startFailed": "Failed to start the IOTA Immutable Storage connector.",
+			"invalidGasBudget": "The gas budget must be greater than 0"
+		},
+		"iotaImmutableStorageUtils": {
+			"invalidImmutableStorageIdFormat": "The immutable storage ID \"{id}\" has an invalid format"
 		}
 	}
 }
