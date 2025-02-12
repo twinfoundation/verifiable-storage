@@ -1,0 +1,11 @@
+{
+	"error": {
+		"immutableStorageService": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Immutable Storage service \"{namespace}\"",
+			"noConnectors": "There are no connectors registered with the Immutable Storage factory",
+			"storeFailed": "The storing of the Immutable Storage failed",
+			"getFailed": "The retrieving of the Immutable Storage failed",
+			"removeFailed": "The removing of the Immutable Storage failed"
+		}
+	}
+}

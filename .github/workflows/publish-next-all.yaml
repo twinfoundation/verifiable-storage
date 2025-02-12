@@ -22,7 +22,8 @@ jobs:
             'packages/immutable-storage-models',
             'packages/immutable-storage-connector-entity-storage',
             'packages/immutable-storage-connector-iota',
-            'packages/immutable-storage-connector-iota-stardust'
+            'packages/immutable-storage-connector-iota-stardust',
+            'packages/immutable-storage-service'
           ]
 
     steps:
