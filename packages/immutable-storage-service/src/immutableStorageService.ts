@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { GeneralError, Guards, Urn } from "@twin.org/core";
+import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import {
 	ImmutableStorageConnectorFactory,
@@ -50,22 +50,21 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 	 * @returns The id of the created Immutable Storage in urn format.
 	 */
 	public async store(
-		data: Uint8Array,
+		data: string,
 		identity?: string
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
 	}> {
-		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
+		Guards.stringBase64(this.CLASS_NAME, nameof(data), data);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
-			const connectorNamespace = this._defaultNamespace;
-
 			const immutableStorageConnector =
-				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(connectorNamespace);
+				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(this._defaultNamespace);
 
-			const immutableStorageResult = await immutableStorageConnector.store(identity, data);
+			const base64String = Converter.base64ToBytes(data);
+			const immutableStorageResult = await immutableStorageConnector.store(identity, base64String);
 
 			return immutableStorageResult;
 		} catch (error) {
@@ -90,7 +89,8 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
-			const immutableStorageConnector = this.getConnector(id);
+			const immutableStorageConnector =
+				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(this._defaultNamespace);
 			return immutableStorageConnector.get(id, options);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
@@ -108,31 +108,11 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
-			const immutableStorageConnector = this.getConnector(id);
+			const immutableStorageConnector =
+				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(this._defaultNamespace);
 			await immutableStorageConnector.remove(identity, id);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
 		}
-	}
-
-	/**
-	 * Get the connector from the uri.
-	 * @param id The id of the Immutable Storage in urn format.
-	 * @returns The connector.
-	 * @internal
-	 */
-	private getConnector(id: string): IImmutableStorageConnector {
-		const idUri = Urn.fromValidString(id);
-
-		if (idUri.namespaceIdentifier() !== ImmutableStorageService.NAMESPACE) {
-			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
-				namespace: ImmutableStorageService.NAMESPACE,
-				id
-			});
-		}
-
-		return ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(
-			idUri.namespaceMethod()
-		);
 	}
 }

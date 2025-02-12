@@ -43,7 +43,8 @@
 		"packages/immutable-storage-connector-entity-storage",
 		"packages/immutable-storage-connector-iota",
 		"packages/immutable-storage-connector-iota-stardust",
-		"packages/immutable-storage-service"
+		"packages/immutable-storage-service",
+		"packages/immutable-storage-rest-client"
 	],
 	"type": "module"
 }

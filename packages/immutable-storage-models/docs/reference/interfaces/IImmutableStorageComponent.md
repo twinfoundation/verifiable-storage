@@ -18,9 +18,9 @@ Store an item in immutable storage.
 
 ##### data
 
-`Uint8Array`
+`string`
 
-The data to store.
+The data to store, this is a string serialized as base64.
 
 ##### identity?
 

@@ -1,6 +1,10 @@
-# Class: ImmutableStorageService
+# Class: ImmutableStorageClient
 
-Service for performing Immutable Storage operations to a connector.
+Client for performing Immutable Storage through to REST endpoints.
+
+## Extends
+
+- `BaseRestClient`
 
 ## Implements
 
@@ -8,33 +12,29 @@ Service for performing Immutable Storage operations to a connector.
 
 ## Constructors
 
-### new ImmutableStorageService()
+### new ImmutableStorageClient()
 
-> **new ImmutableStorageService**(`options`?): [`ImmutableStorageService`](ImmutableStorageService.md)
+> **new ImmutableStorageClient**(`config`): [`ImmutableStorageClient`](ImmutableStorageClient.md)
 
-Create a new instance of ImmutableStorageService.
+Create a new instance of ImmutableStorageClient.
 
 #### Parameters
 
-##### options?
+##### config
 
-[`IImmutableStorageServiceConstructorOptions`](../interfaces/IImmutableStorageServiceConstructorOptions.md)
+`IBaseRestClientConfig`
 
-The options for the service.
+The configuration for the client.
 
 #### Returns
 
-[`ImmutableStorageService`](ImmutableStorageService.md)
+[`ImmutableStorageClient`](ImmutableStorageClient.md)
+
+#### Overrides
+
+`BaseRestClient.constructor`
 
 ## Properties
-
-### NAMESPACE
-
-> `readonly` `static` **NAMESPACE**: `string` = `"immutable"`
-
-The namespace supported by the immutableStorage service.
-
-***
 
 ### CLASS\_NAME
 
@@ -50,7 +50,7 @@ Runtime name for the class.
 
 ### store()
 
-> **store**(`data`, `identity`?): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
+> **store**(`data`): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 Store an Immutable Storage.
 
@@ -61,12 +61,6 @@ Store an Immutable Storage.
 `string`
 
 The data of the Immutable Storage.
-
-##### identity?
-
-`string`
-
-The identity to store the Immutable Storage operation on.
 
 #### Returns
 
@@ -98,7 +92,7 @@ The id of the Immutable Storage to get.
 
 Additional options for getting the Immutable Storage.
 
-###### includeData?
+###### includeData
 
 `boolean`
 
@@ -118,7 +112,7 @@ The data for the Immutable Storage.
 
 ### remove()
 
-> **remove**(`id`, `identity`?): `Promise`\<`void`\>
+> **remove**(`id`): `Promise`\<`void`\>
 
 Remove an Immutable Storage.
 
@@ -128,13 +122,7 @@ Remove an Immutable Storage.
 
 `string`
 
-The id of the Immutable Storage to remove.
-
-##### identity?
-
-`string`
-
-The identity to perform the immutableStorage operation on.
+The id of the Immutable Storage to remove in urn format.
 
 #### Returns
 
