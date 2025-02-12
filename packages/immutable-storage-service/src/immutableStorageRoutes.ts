@@ -39,7 +39,10 @@ export const tagsImmutableStorage: ITag[] = [
  * @param componentName The name of the component to use in the routes stored in the ComponentFactory.
  * @returns The generated routes.
  */
-export function generateRestRoutesImmutableStorage(baseRouteName: string, componentName: string): IRestRoute[] {
+export function generateRestRoutesImmutableStorage(
+	baseRouteName: string,
+	componentName: string
+): IRestRoute[] {
 	const storeRoute: IRestRoute<IImmutableStorageStoreRequest, ICreatedResponse> = {
 		operationId: "immutableStorageStore",
 		summary: "Store an Immutable Storage",
@@ -55,7 +58,12 @@ export function generateRestRoutesImmutableStorage(baseRouteName: string, compon
 					id: "immutableStorageStoreExample",
 					request: {
 						body: {
-							data: new Uint8Array(Buffer.from("tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv", "utf8"))
+							data: new Uint8Array(
+								Buffer.from(
+									"tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+									"utf8"
+								)
+							)
 						}
 					}
 				}
@@ -86,8 +94,7 @@ export function generateRestRoutesImmutableStorage(baseRouteName: string, compon
 		tag: tagsImmutableStorage[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
-		handler: async (httpRequestContext, request) =>
-			immutableStorageGet(componentName, request),
+		handler: async (httpRequestContext, request) => immutableStorageGet(componentName, request),
 		requestType: {
 			type: nameof<IImmutableStorageGetRequest>(),
 			examples: [
@@ -112,9 +119,9 @@ export function generateRestRoutesImmutableStorage(baseRouteName: string, compon
 								data: new Uint8Array(Buffer.from("MY-Immutable-Storage", "utf8")),
 								receipt: {
 									"@context": "https://www.w3.org/ns/activitystreams",
-									"type": "Create",
-									"actor": "https://example.org/actor",
-									"object": "https://example.org/object"
+									type: "Create",
+									actor: "https://example.org/actor",
+									object: "https://example.org/object"
 								}
 							}
 						}
@@ -168,13 +175,14 @@ export async function immutableStorageStore(
 	request: IImmutableStorageStoreRequest
 ): Promise<ICreatedResponse> {
 	Guards.object<IImmutableStorageStoreRequest>(ROUTES_SOURCE, nameof(request), request);
-	Guards.object<IImmutableStorageStoreRequest["body"]>(ROUTES_SOURCE, nameof(request.body), request.body);
+	Guards.object<IImmutableStorageStoreRequest["body"]>(
+		ROUTES_SOURCE,
+		nameof(request.body),
+		request.body
+	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const component = ComponentFactory.get<IImmutableStorageComponent>(componentName);
-	const result = await component.store(
-		request.body.data,
-		httpRequestContext.userIdentity
-	);
+	const result = await component.store(request.body.data, httpRequestContext.userIdentity);
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {

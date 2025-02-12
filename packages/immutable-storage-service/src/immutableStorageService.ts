@@ -2,7 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { GeneralError, Guards, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import { ImmutableStorageConnectorFactory, type IImmutableStorageComponent, type IImmutableStorageConnector } from "@twin.org/immutable-storage-models";
+import {
+	ImmutableStorageConnectorFactory,
+	type IImmutableStorageComponent,
+	type IImmutableStorageConnector
+} from "@twin.org/immutable-storage-models";
 import { nameof } from "@twin.org/nameof";
 import type { IImmutableStorageServiceConstructorOptions } from "./models/IImmutableStorageServiceConstructorOptions";
 
@@ -127,6 +131,8 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 			});
 		}
 
-		return ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(idUri.namespaceMethod());
+		return ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(
+			idUri.namespaceMethod()
+		);
 	}
 }
