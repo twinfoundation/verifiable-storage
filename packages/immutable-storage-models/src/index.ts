@@ -8,3 +8,4 @@ export * from "./models/api/IImmutableStorageGetRequest";
 export * from "./models/api/IImmutableStorageGetResponse";
 export * from "./models/api/IImmutableStorageRemoveRequest";
 export * from "./models/api/IImmutableStorageStoreRequest";
+export * from "./models/api/IImmutableStorageStoreResponse";

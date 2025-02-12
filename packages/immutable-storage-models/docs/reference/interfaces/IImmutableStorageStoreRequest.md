@@ -12,6 +12,6 @@ The data to be stored.
 
 #### data
 
-> **data**: `Uint8Array`
+> **data**: `string`
 
-The data for the Immutable Storage.
+The data for the Immutable Storage, this is a string serialized as base64.

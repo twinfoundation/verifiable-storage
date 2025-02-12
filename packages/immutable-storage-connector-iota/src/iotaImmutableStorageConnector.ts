@@ -349,6 +349,8 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 				receipt: receipt as IJsonLdNodeObject
 			};
 		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.log("error", error);
 			throw new GeneralError(
 				this.CLASS_NAME,
 				"storingFailed",

@@ -5,8 +5,8 @@ import { generateRestRoutesImmutableStorage, tagsImmutableStorage } from "./immu
 
 export const restEntryPoints: IRestRouteEntryPoint[] = [
 	{
-		name: "immutableStorage",
-		defaultBaseRoute: "immutableStorage",
+		name: "immutable",
+		defaultBaseRoute: "immutable",
 		tags: tagsImmutableStorage,
 		generateRoutes: generateRestRoutesImmutableStorage
 	}

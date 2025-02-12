@@ -30,7 +30,7 @@ The options for the service.
 
 ### NAMESPACE
 
-> `readonly` `static` **NAMESPACE**: `string` = `"immutableStorage"`
+> `readonly` `static` **NAMESPACE**: `string` = `"immutable"`
 
 The namespace supported by the immutableStorage service.
 

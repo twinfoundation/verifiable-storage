@@ -1,6 +1,6 @@
 # Function: immutableStorageStore()
 
-> **immutableStorageStore**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`ICreatedResponse`\>
+> **immutableStorageStore**(`httpRequestContext`, `componentName`, `request`): `Promise`\<`IImmutableStorageStoreResponse`\>
 
 Store an Immutable Storage.
 
@@ -26,6 +26,6 @@ The request.
 
 ## Returns
 
-`Promise`\<`ICreatedResponse`\>
+`Promise`\<`IImmutableStorageStoreResponse`\>
 
 The response object with additional http response properties.

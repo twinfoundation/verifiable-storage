@@ -1,16 +1,16 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type {
-	ICreatedResponse,
 	IHttpRequestContext,
 	INoContentResponse,
 	IRestRoute,
 	ITag
 } from "@twin.org/api-models";
-import { ComponentFactory, Guards } from "@twin.org/core";
+import { ComponentFactory, Converter, Guards } from "@twin.org/core";
 import type {
 	IImmutableStorageComponent,
 	IImmutableStorageStoreRequest,
+	IImmutableStorageStoreResponse,
 	IImmutableStorageGetRequest,
 	IImmutableStorageGetResponse,
 	IImmutableStorageRemoveRequest
@@ -43,7 +43,7 @@ export function generateRestRoutesImmutableStorage(
 	baseRouteName: string,
 	componentName: string
 ): IRestRoute[] {
-	const storeRoute: IRestRoute<IImmutableStorageStoreRequest, ICreatedResponse> = {
+	const storeRoute: IRestRoute<IImmutableStorageStoreRequest, IImmutableStorageStoreResponse> = {
 		operationId: "immutableStorageStore",
 		summary: "Store an Immutable Storage",
 		tag: tagsImmutableStorage[0].name,
@@ -58,12 +58,7 @@ export function generateRestRoutesImmutableStorage(
 					id: "immutableStorageStoreExample",
 					request: {
 						body: {
-							data: new Uint8Array(
-								Buffer.from(
-									"tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
-									"utf8"
-								)
-							)
+							data: "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv"
 						}
 					}
 				}
@@ -71,7 +66,7 @@ export function generateRestRoutesImmutableStorage(
 		},
 		responseType: [
 			{
-				type: nameof<ICreatedResponse>(),
+				type: nameof<IImmutableStorageStoreResponse>(),
 				examples: [
 					{
 						id: "immutableStorageStoreResponseExample",
@@ -79,7 +74,16 @@ export function generateRestRoutesImmutableStorage(
 							statusCode: HttpStatusCode.created,
 							headers: {
 								[HeaderTypes.Location]:
-									"immutable-storage:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+									"immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+							},
+							body: {
+								receipt: {
+									"@context": "https://www.w3.org/ns/activitystreams",
+									type: "Create",
+									actor: "https://example.org/actor",
+									object: "https://example.org/object"
+								},
+								id: "immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 							}
 						}
 					}
@@ -102,7 +106,7 @@ export function generateRestRoutesImmutableStorage(
 					id: "immutableStorageGetExample",
 					request: {
 						pathParams: {
-							id: "immutableStorage:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+							id: "immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 						}
 					}
 				}
@@ -116,7 +120,7 @@ export function generateRestRoutesImmutableStorage(
 						id: "immutableStorageGetResponseExample",
 						response: {
 							body: {
-								data: new Uint8Array(Buffer.from("MY-Immutable-Storage", "utf8")),
+								data: "MY-Immutable-Storage",
 								receipt: {
 									"@context": "https://www.w3.org/ns/activitystreams",
 									type: "Create",
@@ -146,7 +150,7 @@ export function generateRestRoutesImmutableStorage(
 					id: "immutableStorageRemoveExample",
 					request: {
 						pathParams: {
-							id: "immutableStorage:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+							id: "immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 						}
 					}
 				}
@@ -173,7 +177,7 @@ export async function immutableStorageStore(
 	httpRequestContext: IHttpRequestContext,
 	componentName: string,
 	request: IImmutableStorageStoreRequest
-): Promise<ICreatedResponse> {
+): Promise<IImmutableStorageStoreResponse> {
 	Guards.object<IImmutableStorageStoreRequest>(ROUTES_SOURCE, nameof(request), request);
 	Guards.object<IImmutableStorageStoreRequest["body"]>(
 		ROUTES_SOURCE,
@@ -182,11 +186,16 @@ export async function immutableStorageStore(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const component = ComponentFactory.get<IImmutableStorageComponent>(componentName);
-	const result = await component.store(request.body.data, httpRequestContext.userIdentity);
+	const base64String = Converter.base64ToBytes(request.body.data);
+	const result = await component.store(base64String, httpRequestContext.userIdentity);
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {
 			[HeaderTypes.Location]: result.id
+		},
+		body: {
+			receipt: result.receipt,
+			id: result.id
 		}
 	};
 }
@@ -211,8 +220,12 @@ export async function immutableStorageGet(
 
 	const component = ComponentFactory.get<IImmutableStorageComponent>(componentName);
 	const result = await component.get(request.pathParams.id, request.body);
+	const data = result.data ? Converter.bytesToBase64(result.data) : undefined;
 	return {
-		body: result
+		body: {
+			data,
+			receipt: result.receipt
+		}
 	};
 }
 

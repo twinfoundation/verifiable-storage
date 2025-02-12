@@ -17,7 +17,7 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 	/**
 	 * The namespace supported by the immutableStorage service.
 	 */
-	public static readonly NAMESPACE: string = "immutableStorage";
+	public static readonly NAMESPACE: string = "immutable";
 
 	/**
 	 * Runtime name for the class.
@@ -65,9 +65,9 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 			const immutableStorageConnector =
 				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(connectorNamespace);
 
-			const immutableStorageUrn = await immutableStorageConnector.store(identity, data);
+			const immutableStorageResult = await immutableStorageConnector.store(identity, data);
 
-			return immutableStorageUrn;
+			return immutableStorageResult;
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "storeFailed", undefined, error);
 		}

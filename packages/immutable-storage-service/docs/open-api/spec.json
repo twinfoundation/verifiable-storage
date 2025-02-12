@@ -21,7 +21,7 @@
 		}
 	],
 	"paths": {
-		"/immutableStorage": {
+		"/immutable": {
 			"post": {
 				"operationId": "immutableStorageStore",
 				"summary": "Store an Immutable Storage",
@@ -44,71 +44,7 @@
 							"examples": {
 								"immutableStorageStoreExample": {
 									"value": {
-										"data": {
-											"0": 116,
-											"1": 115,
-											"2": 116,
-											"3": 49,
-											"4": 112,
-											"5": 114,
-											"6": 99,
-											"7": 116,
-											"8": 106,
-											"9": 107,
-											"10": 53,
-											"11": 99,
-											"12": 107,
-											"13": 48,
-											"14": 100,
-											"15": 117,
-											"16": 116,
-											"17": 110,
-											"18": 115,
-											"19": 117,
-											"20": 110,
-											"21": 110,
-											"22": 106,
-											"23": 101,
-											"24": 54,
-											"25": 117,
-											"26": 57,
-											"27": 48,
-											"28": 106,
-											"29": 107,
-											"30": 53,
-											"31": 104,
-											"32": 116,
-											"33": 120,
-											"34": 48,
-											"35": 51,
-											"36": 113,
-											"37": 122,
-											"38": 110,
-											"39": 106,
-											"40": 106,
-											"41": 109,
-											"42": 107,
-											"43": 100,
-											"44": 54,
-											"45": 56,
-											"46": 52,
-											"47": 51,
-											"48": 112,
-											"49": 122,
-											"50": 108,
-											"51": 116,
-											"52": 108,
-											"53": 103,
-											"54": 122,
-											"55": 56,
-											"56": 55,
-											"57": 115,
-											"58": 114,
-											"59": 106,
-											"60": 122,
-											"61": 122,
-											"62": 118
-										}
+										"data": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv"
 									}
 								}
 							}
@@ -116,14 +52,34 @@
 					}
 				},
 				"responses": {
-					"201": {
-						"description": "The rest request ended in created response.",
+					"200": {
+						"description": "Response to storing the Immutable Storage.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ImmutableStorageStoreResponse"
+								},
+								"examples": {
+									"immutableStorageStoreResponseExample": {
+										"value": {
+											"receipt": {
+												"@context": "https://www.w3.org/ns/activitystreams",
+												"type": "Create",
+												"actor": "https://example.org/actor",
+												"object": "https://example.org/object"
+											},
+											"id": "immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+										}
+									}
+								}
+							}
+						},
 						"headers": {
 							"location": {
 								"schema": {
 									"type": "string"
 								},
-								"description": "e.g. immutable-storage:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+								"description": "e.g. immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 							}
 						}
 					},
@@ -187,7 +143,7 @@
 				}
 			}
 		},
-		"/immutableStorage/{id}": {
+		"/immutable/{id}": {
 			"get": {
 				"operationId": "immutableStorageGet",
 				"summary": "Get an Immutable Storage",
@@ -204,7 +160,7 @@
 							"type": "string"
 						},
 						"style": "simple",
-						"example": "immutableStorage:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+						"example": "immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 					}
 				],
 				"security": [
@@ -234,28 +190,7 @@
 								"examples": {
 									"immutableStorageGetResponseExample": {
 										"value": {
-											"data": {
-												"0": 77,
-												"1": 89,
-												"2": 45,
-												"3": 73,
-												"4": 109,
-												"5": 109,
-												"6": 117,
-												"7": 116,
-												"8": 97,
-												"9": 98,
-												"10": 108,
-												"11": 101,
-												"12": 45,
-												"13": 83,
-												"14": 116,
-												"15": 111,
-												"16": 114,
-												"17": 97,
-												"18": 103,
-												"19": 101
-											},
+											"data": "MY-Immutable-Storage",
 											"receipt": {
 												"@context": "https://www.w3.org/ns/activitystreams",
 												"type": "Create",
@@ -343,7 +278,7 @@
 							"type": "string"
 						},
 						"style": "simple",
-						"example": "immutableStorage:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+						"example": "immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 					}
 				],
 				"security": [
@@ -418,18 +353,6 @@
 	},
 	"components": {
 		"schemas": {
-			"ArrayBuffer": {
-				"type": "object",
-				"properties": {
-					"byteLength": {
-						"type": "number"
-					}
-				},
-				"required": [
-					"byteLength"
-				],
-				"additionalProperties": false
-			},
 			"Error": {
 				"type": "object",
 				"properties": {
@@ -486,7 +409,8 @@
 						"$ref": "#/components/schemas/JsonLdNodeObject"
 					},
 					"data": {
-						"$ref": "#/components/schemas/Uint8Array"
+						"type": "string",
+						"description": "The data of the Immutable Storage, this is a string serialized as base64."
 					}
 				},
 				"required": [
@@ -499,7 +423,8 @@
 				"type": "object",
 				"properties": {
 					"data": {
-						"$ref": "#/components/schemas/Uint8Array"
+						"type": "string",
+						"description": "The data for the Immutable Storage, this is a string serialized as base64."
 					}
 				},
 				"required": [
@@ -507,6 +432,24 @@
 				],
 				"additionalProperties": false,
 				"description": "The data to be stored."
+			},
+			"ImmutableStorageStoreResponse": {
+				"type": "object",
+				"properties": {
+					"receipt": {
+						"$ref": "#/components/schemas/JsonLdNodeObject"
+					},
+					"id": {
+						"type": "string",
+						"description": "The id of the Immutable Storage."
+					}
+				},
+				"required": [
+					"receipt",
+					"id"
+				],
+				"additionalProperties": false,
+				"description": "The data that was stored."
 			},
 			"JsonLdContainerType": {
 				"type": "string",

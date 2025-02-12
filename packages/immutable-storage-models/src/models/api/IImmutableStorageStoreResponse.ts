@@ -1,13 +1,14 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type {	ICreatedResponse } from "@twin.org/api-models";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 
 /**
- * Response to getting the Immutable Storage.
+ * Response to storing the Immutable Storage.
  */
-export interface IImmutableStorageGetResponse {
+export interface IImmutableStorageStoreResponse extends ICreatedResponse {
 	/**
-	 * The data that was obtained.
+	 * The data that was stored.
 	 */
 	body: {
 		/**
@@ -16,8 +17,8 @@ export interface IImmutableStorageGetResponse {
 		receipt: IJsonLdNodeObject;
 
 		/**
-		 * The data of the Immutable Storage, this is a string serialized as base64.
+		 * The id of the Immutable Storage.
 		 */
-		data?: string;
+		id: string;
 	};
 }

@@ -18,6 +18,6 @@ The receipt associated to the Immutable Storage.
 
 #### data?
 
-> `optional` **data**: `Uint8Array`\<`ArrayBufferLike`\>
+> `optional` **data**: `string`
 
-The data of the Immutable Storage.
+The data of the Immutable Storage, this is a string serialized as base64.

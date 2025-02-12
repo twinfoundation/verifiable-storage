@@ -10,8 +10,8 @@ export interface IImmutableStorageStoreRequest {
 	 */
 	body: {
 		/**
-		 * The data for the Immutable Storage.
+		 * The data for the Immutable Storage, this is a string serialized as base64.
 		 */
-		data: Uint8Array;
+		data: string;
 	};
 }

@@ -8,6 +8,7 @@
 - [IImmutableStorageGetResponse](interfaces/IImmutableStorageGetResponse.md)
 - [IImmutableStorageRemoveRequest](interfaces/IImmutableStorageRemoveRequest.md)
 - [IImmutableStorageStoreRequest](interfaces/IImmutableStorageStoreRequest.md)
+- [IImmutableStorageStoreResponse](interfaces/IImmutableStorageStoreResponse.md)
 
 ## Type Aliases
 
