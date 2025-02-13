@@ -182,7 +182,7 @@ export async function immutableStorageStore(
 		nameof(request.body),
 		request.body
 	);
-	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
+	Guards.stringBase64(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const component = ComponentFactory.get<IImmutableStorageComponent>(componentName);
 	const result = await component.store(
 		Converter.base64ToBytes(request.body.data),

@@ -40,7 +40,7 @@ export class ImmutableStorageClient extends BaseRestClient implements IImmutable
 		id: string;
 		receipt: IJsonLdNodeObject;
 	}> {
-		Guards.stringValue(this.CLASS_NAME, nameof(data), data);
+		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
 
 		const response = await this.fetch<
 			IImmutableStorageStoreRequest,
@@ -84,16 +84,11 @@ export class ImmutableStorageClient extends BaseRestClient implements IImmutable
 			}
 		);
 
-		const responseBody = response.body as {
-			data?: string;
-			receipt: IJsonLdNodeObject;
-		};
-
-		const data = responseBody.data ? Converter.base64ToBytes(responseBody.data) : undefined;
+		const data = response.body.data ? Converter.base64ToBytes(response.body.data) : undefined;
 
 		return {
 			data,
-			receipt: responseBody.receipt
+			receipt: response.body.receipt
 		};
 	}
 
