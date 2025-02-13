@@ -58,7 +58,7 @@ Store an Immutable Storage.
 
 ##### data
 
-`string`
+`Uint8Array`
 
 The data of the Immutable Storage.
 

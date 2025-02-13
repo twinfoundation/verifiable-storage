@@ -9,13 +9,13 @@ import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 export interface IImmutableStorageComponent extends IComponent {
 	/**
 	 * Store an item in immutable storage.
-	 * @param data The data to store, this is a string serialized as base64.
+	 * @param data The data to store.
 	 * @param identity The identity of the user to access the vault keys.
 	 * @param namespace The namespace to store the item in.
 	 * @returns The id of the stored immutable item in urn format and the receipt.
 	 */
 	store(
-		data: string,
+		data: Uint8Array,
 		identity?: string,
 		namespace?: string
 	): Promise<{

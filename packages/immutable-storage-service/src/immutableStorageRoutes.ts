@@ -58,7 +58,7 @@ export function generateRestRoutesImmutableStorage(
 					id: "immutableStorageStoreExample",
 					request: {
 						body: {
-							data: "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv"
+							data: "SGVsbG8gd29ybGQ="
 						}
 					}
 				}
@@ -78,10 +78,8 @@ export function generateRestRoutesImmutableStorage(
 							},
 							body: {
 								receipt: {
-									"@context": "https://www.w3.org/ns/activitystreams",
-									type: "Create",
-									actor: "https://example.org/actor",
-									object: "https://example.org/object"
+									"@context": "https://schema.twindev.org/immutable-storage/",
+									type: "ImmutableStorageIotaReceipt"
 								},
 								id: "immutable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
 							}
@@ -120,7 +118,7 @@ export function generateRestRoutesImmutableStorage(
 						id: "immutableStorageGetResponseExample",
 						response: {
 							body: {
-								data: "MY-Immutable-Storage",
+								data: "SGVsbG8gd29ybGQ=",
 								receipt: {
 									"@context": "https://www.w3.org/ns/activitystreams",
 									type: "Create",
@@ -187,7 +185,7 @@ export async function immutableStorageStore(
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const component = ComponentFactory.get<IImmutableStorageComponent>(componentName);
 	const result = await component.store(
-		request.body.data,
+		Converter.base64ToBytes(request.body.data),
 		httpRequestContext.userIdentity,
 		request.body.namespace
 	);

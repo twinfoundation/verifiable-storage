@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Converter, GeneralError, Guards, Urn } from "@twin.org/core";
+import { GeneralError, Guards, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import {
 	ImmutableStorageConnectorFactory,
@@ -51,14 +51,14 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 	 * @returns The id of the created Immutable Storage in urn format.
 	 */
 	public async store(
-		data: string,
+		data: Uint8Array,
 		identity?: string,
 		namespace?: string
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
 	}> {
-		Guards.stringBase64(this.CLASS_NAME, nameof(data), data);
+		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
@@ -67,8 +67,7 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 			const immutableStorageConnector =
 				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(connectorNamespace);
 
-			const base64String = Converter.base64ToBytes(data);
-			const immutableStorageResult = await immutableStorageConnector.store(identity, base64String);
+			const immutableStorageResult = await immutableStorageConnector.store(identity, data);
 
 			return immutableStorageResult;
 		} catch (error) {

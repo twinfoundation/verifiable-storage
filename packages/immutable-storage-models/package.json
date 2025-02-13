@@ -29,6 +29,7 @@
 		"prepare": "ts-patch install -s"
 	},
 	"dependencies": {
+		"@twin.org/api-models": "next",
 		"@twin.org/core": "next",
 		"@twin.org/data-json-ld": "next",
 		"@twin.org/nameof": "next",

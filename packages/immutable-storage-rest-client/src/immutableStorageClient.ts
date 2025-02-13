@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
 import type { IBaseRestClientConfig } from "@twin.org/api-models";
-import { Guards, Urn } from "@twin.org/core";
+import { Converter, Guards, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type {
 	IImmutableStorageRemoveRequest,
@@ -36,7 +36,7 @@ export class ImmutableStorageClient extends BaseRestClient implements IImmutable
 	 * @param data The data of the Immutable Storage.
 	 * @returns The id of the created Immutable Storage in urn format.
 	 */
-	public async store(data: string): Promise<{
+	public async store(data: Uint8Array): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
 	}> {
@@ -47,7 +47,7 @@ export class ImmutableStorageClient extends BaseRestClient implements IImmutable
 			IImmutableStorageStoreResponse
 		>("/", "POST", {
 			body: {
-				data
+				data: Converter.bytesToBase64(data)
 			}
 		});
 
@@ -84,9 +84,16 @@ export class ImmutableStorageClient extends BaseRestClient implements IImmutable
 			}
 		);
 
-		return response.body as {
-			data?: Uint8Array;
+		const responseBody = response.body as {
+			data?: string;
 			receipt: IJsonLdNodeObject;
+		};
+
+		const data = responseBody.data ? Converter.base64ToBytes(responseBody.data) : undefined;
+
+		return {
+			data,
+			receipt: responseBody.receipt
 		};
 	}
 
