@@ -11,11 +11,13 @@ export interface IImmutableStorageComponent extends IComponent {
 	 * Store an item in immutable storage.
 	 * @param data The data to store, this is a string serialized as base64.
 	 * @param identity The identity of the user to access the vault keys.
+	 * @param namespace The namespace to store the item in.
 	 * @returns The id of the stored immutable item in urn format and the receipt.
 	 */
 	store(
 		data: string,
-		identity?: string
+		identity?: string,
+		namespace?: string
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;

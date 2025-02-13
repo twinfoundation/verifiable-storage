@@ -10,7 +10,7 @@ Interface describing an Immutable Storage component.
 
 ### store()
 
-> **store**(`data`, `identity`?): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
+> **store**(`data`, `identity`?, `namespace`?): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 Store an item in immutable storage.
 
@@ -27,6 +27,12 @@ The data to store, this is a string serialized as base64.
 `string`
 
 The identity of the user to access the vault keys.
+
+##### namespace?
+
+`string`
+
+The namespace to store the item in.
 
 #### Returns
 

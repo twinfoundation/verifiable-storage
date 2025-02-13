@@ -50,7 +50,7 @@ Runtime name for the class.
 
 ### store()
 
-> **store**(`data`, `identity`?): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
+> **store**(`data`, `identity`?, `namespace`?): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 Store an Immutable Storage.
 
@@ -67,6 +67,12 @@ The data of the Immutable Storage.
 `string`
 
 The identity to store the Immutable Storage operation on.
+
+##### namespace?
+
+`string`
+
+The namespace to use for the Immutable Storage.
 
 #### Returns
 

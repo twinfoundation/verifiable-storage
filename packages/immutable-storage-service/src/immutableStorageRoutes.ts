@@ -186,7 +186,11 @@ export async function immutableStorageStore(
 	);
 	Guards.stringValue(ROUTES_SOURCE, nameof(request.body.data), request.body.data);
 	const component = ComponentFactory.get<IImmutableStorageComponent>(componentName);
-	const result = await component.store(request.body.data, httpRequestContext.userIdentity);
+	const result = await component.store(
+		request.body.data,
+		httpRequestContext.userIdentity,
+		request.body.namespace
+	);
 	return {
 		statusCode: HttpStatusCode.created,
 		headers: {

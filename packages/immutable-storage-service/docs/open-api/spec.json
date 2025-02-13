@@ -425,6 +425,10 @@
 					"data": {
 						"type": "string",
 						"description": "The data for the Immutable Storage, this is a string serialized as base64."
+					},
+					"namespace": {
+						"type": "string",
+						"description": "The namespace of the connector to use for the Immutable Storage, defaults to component configured namespace."
 					}
 				},
 				"required": [

@@ -15,3 +15,9 @@ The data to be stored.
 > **data**: `string`
 
 The data for the Immutable Storage, this is a string serialized as base64.
+
+#### namespace?
+
+> `optional` **namespace**: `string`
+
+The namespace of the connector to use for the Immutable Storage, defaults to component configured namespace.

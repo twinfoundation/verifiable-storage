@@ -47,11 +47,13 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 	 * Store an Immutable Storage.
 	 * @param data The data of the Immutable Storage.
 	 * @param identity The identity to store the Immutable Storage operation on.
+	 * @param namespace The namespace to use for the Immutable Storage.
 	 * @returns The id of the created Immutable Storage in urn format.
 	 */
 	public async store(
 		data: string,
-		identity?: string
+		identity?: string,
+		namespace?: string
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
@@ -60,8 +62,10 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
+			const connectorNamespace = namespace ?? this._defaultNamespace;
+
 			const immutableStorageConnector =
-				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(this._defaultNamespace);
+				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(connectorNamespace);
 
 			const base64String = Converter.base64ToBytes(data);
 			const immutableStorageResult = await immutableStorageConnector.store(identity, base64String);
@@ -89,8 +93,7 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
 		try {
-			const immutableStorageConnector =
-				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(this._defaultNamespace);
+			const immutableStorageConnector = this.getConnector(id);
 			return immutableStorageConnector.get(id, options);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "getFailed", undefined, error);
@@ -108,11 +111,31 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
-			const immutableStorageConnector =
-				ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(this._defaultNamespace);
+			const immutableStorageConnector = this.getConnector(id);
 			await immutableStorageConnector.remove(identity, id);
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "removeFailed", undefined, error);
 		}
+	}
+
+	/**
+	 * Get the connector from the uri.
+	 * @param id The id of the NFT in urn format.
+	 * @returns The connector.
+	 * @internal
+	 */
+	private getConnector(id: string): IImmutableStorageConnector {
+		const idUri = Urn.fromValidString(id);
+
+		if (idUri.namespaceIdentifier() !== ImmutableStorageService.NAMESPACE) {
+			throw new GeneralError(this.CLASS_NAME, "namespaceMismatch", {
+				namespace: ImmutableStorageService.NAMESPACE,
+				id
+			});
+		}
+
+		return ImmutableStorageConnectorFactory.get<IImmutableStorageConnector>(
+			idUri.namespaceMethod()
+		);
 	}
 }
