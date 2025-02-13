@@ -45,7 +45,7 @@ export function generateRestRoutesImmutableStorage(
 ): IRestRoute[] {
 	const storeRoute: IRestRoute<IImmutableStorageStoreRequest, IImmutableStorageStoreResponse> = {
 		operationId: "immutableStorageStore",
-		summary: "Store an Immutable Storage",
+		summary: "Store an item in immutable storage",
 		tag: tagsImmutableStorage[0].name,
 		method: "POST",
 		path: `${baseRouteName}/`,
@@ -92,7 +92,7 @@ export function generateRestRoutesImmutableStorage(
 
 	const getRoute: IRestRoute<IImmutableStorageGetRequest, IImmutableStorageGetResponse> = {
 		operationId: "immutableStorageGet",
-		summary: "Get an Immutable Storage",
+		summary: "Get an immutable storage item",
 		tag: tagsImmutableStorage[0].name,
 		method: "GET",
 		path: `${baseRouteName}/:id`,
@@ -135,7 +135,7 @@ export function generateRestRoutesImmutableStorage(
 
 	const removeRoute: IRestRoute<IImmutableStorageRemoveRequest, INoContentResponse> = {
 		operationId: "immutableStorageRemove",
-		summary: "Remove an Immutable Storage",
+		summary: "Remove an item from immutable storage",
 		tag: tagsImmutableStorage[0].name,
 		method: "DELETE",
 		path: `${baseRouteName}/:id`,

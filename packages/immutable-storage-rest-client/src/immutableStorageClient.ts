@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
-import type { IBaseRestClientConfig } from "@twin.org/api-models";
+import type { IBaseRestClientConfig, INoContentResponse } from "@twin.org/api-models";
 import { Converter, Guards, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import type {
@@ -51,10 +51,7 @@ export class ImmutableStorageClient extends BaseRestClient implements IImmutable
 			}
 		});
 
-		return response.body as {
-			id: string;
-			receipt: IJsonLdNodeObject;
-		};
+		return response.body;
 	}
 
 	/**
@@ -100,7 +97,7 @@ export class ImmutableStorageClient extends BaseRestClient implements IImmutable
 	public async remove(id: string): Promise<void> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
 
-		await this.fetch<IImmutableStorageRemoveRequest, never>("/:id", "DELETE", {
+		await this.fetch<IImmutableStorageRemoveRequest, INoContentResponse>("/:id", "DELETE", {
 			pathParams: {
 				id
 			}

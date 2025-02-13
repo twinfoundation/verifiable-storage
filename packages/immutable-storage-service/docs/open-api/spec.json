@@ -24,7 +24,7 @@
 		"/immutable": {
 			"post": {
 				"operationId": "immutableStorageStore",
-				"summary": "Store an Immutable Storage",
+				"summary": "Store an item in immutable storage",
 				"tags": [
 					"ImmutableStorage"
 				],
@@ -144,7 +144,7 @@
 		"/immutable/{id}": {
 			"get": {
 				"operationId": "immutableStorageGet",
-				"summary": "Get an Immutable Storage",
+				"summary": "Get an immutable storage item",
 				"tags": [
 					"ImmutableStorage"
 				],
@@ -262,7 +262,7 @@
 			},
 			"delete": {
 				"operationId": "immutableStorageRemove",
-				"summary": "Remove an Immutable Storage",
+				"summary": "Remove an item from immutable storage",
 				"tags": [
 					"ImmutableStorage"
 				],

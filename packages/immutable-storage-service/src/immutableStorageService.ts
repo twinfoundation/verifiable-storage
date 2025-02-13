@@ -119,7 +119,7 @@ export class ImmutableStorageService implements IImmutableStorageComponent {
 
 	/**
 	 * Get the connector from the uri.
-	 * @param id The id of the NFT in urn format.
+	 * @param id The id of the item in urn format.
 	 * @returns The connector.
 	 * @internal
 	 */
