@@ -15,7 +15,7 @@ import {
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
 import {
-	ImmutableStorageTypes,
+	ImmutableStorageContexts,
 	type IImmutableStorageConnector
 } from "@twin.org/immutable-storage-models";
 import { nameof } from "@twin.org/nameof";
@@ -82,7 +82,7 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 			await this._immutableStorageEntityStorage.set(immutableItem);
 
 			const receipt: IImmutableStorageEntityStorageReceipt = {
-				"@context": ImmutableStorageTypes.ContextRoot,
+				"@context": ImmutableStorageContexts.ContextRoot,
 				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt,
 				entityStorageId: immutableItemId
 			};
@@ -129,7 +129,7 @@ export class EntityStorageImmutableStorageConnector implements IImmutableStorage
 			}
 
 			const receipt: IImmutableStorageEntityStorageReceipt = {
-				"@context": ImmutableStorageTypes.ContextRoot,
+				"@context": ImmutableStorageContexts.ContextRoot,
 				type: EntityStorageImmutableStorageTypes.EntityStorageReceipt,
 				entityStorageId: immutableItemId
 			};

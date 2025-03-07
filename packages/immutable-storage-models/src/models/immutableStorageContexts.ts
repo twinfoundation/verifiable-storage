@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * The types of immutable storage data.
+ * The contexts of immutable storage data.
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ImmutableStorageTypes = {
+export const ImmutableStorageContexts = {
 	/**
 	 * The context root for the immutable storage types.
 	 */
@@ -13,7 +13,7 @@ export const ImmutableStorageTypes = {
 } as const;
 
 /**
- * The types of immutable storage data.
+ * The contexts of immutable storage data.
  */
-export type ImmutableStorageTypes =
-	(typeof ImmutableStorageTypes)[keyof typeof ImmutableStorageTypes];
+export type ImmutableStorageContexts =
+	(typeof ImmutableStorageContexts)[keyof typeof ImmutableStorageContexts];

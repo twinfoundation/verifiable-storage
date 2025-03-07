@@ -16,7 +16,7 @@ import { Converter, GeneralError, Guards, Is, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { IotaStardust } from "@twin.org/dlt-iota-stardust";
 import {
-	ImmutableStorageTypes,
+	ImmutableStorageContexts,
 	type IImmutableStorageConnector
 } from "@twin.org/immutable-storage-models";
 import { nameof } from "@twin.org/nameof";
@@ -130,7 +130,7 @@ export class IotaStardustImmutableStorageConnector implements IImmutableStorageC
 			const basicOutputResponse = await client.getOutput(`${transactionId}0000`);
 
 			const receipt: IImmutableStorageIotaStardustReceipt = {
-				"@context": ImmutableStorageTypes.ContextRoot,
+				"@context": ImmutableStorageContexts.ContextRoot,
 				type: IotaStardustImmutableStorageTypes.IotaReceipt,
 				milestoneIndexBooked: basicOutputResponse.metadata.milestoneIndexBooked,
 				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked,
@@ -188,7 +188,7 @@ export class IotaStardustImmutableStorageConnector implements IImmutableStorageC
 			const basicOutput = basicOutputResponse.output as BasicOutput;
 
 			const receipt: IImmutableStorageIotaStardustReceipt = {
-				"@context": ImmutableStorageTypes.ContextRoot,
+				"@context": ImmutableStorageContexts.ContextRoot,
 				type: IotaStardustImmutableStorageTypes.IotaReceipt,
 				milestoneIndexBooked: basicOutputResponse.metadata.milestoneIndexBooked,
 				milestoneTimestampBooked: basicOutputResponse.metadata.milestoneTimestampBooked,

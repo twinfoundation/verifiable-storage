@@ -6,7 +6,7 @@ import { BaseError, Converter, GeneralError, Guards, Is, StringHelper, Urn } fro
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { Iota, type IIotaDryRun } from "@twin.org/dlt-iota";
 import {
-	ImmutableStorageTypes,
+	ImmutableStorageContexts,
 	type IImmutableStorageConnector
 } from "@twin.org/immutable-storage-models";
 import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
@@ -334,7 +334,7 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 			}
 
 			const receipt = {
-				"@context": ImmutableStorageTypes.ContextRoot,
+				"@context": ImmutableStorageContexts.ContextRoot,
 				type: IotaImmutableStorageTypes.IotaReceipt,
 				timestamp: Number(storageEvent?.timestampMs ?? Date.now())
 			};
@@ -400,7 +400,7 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 			const fields = parsedData.fields;
 
 			const receipt = {
-				"@context": ImmutableStorageTypes.ContextRoot,
+				"@context": ImmutableStorageContexts.ContextRoot,
 				type: IotaImmutableStorageTypes.IotaReceipt,
 				timestamp: Number(fields.timestamp)
 			};

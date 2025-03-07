@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { ImmutableStorageTypes } from "@twin.org/immutable-storage-models";
+import type { ImmutableStorageContexts } from "@twin.org/immutable-storage-models";
 import type { EntityStorageImmutableStorageTypes } from "./entityStorageImmutableStorageTypes";
 
 /**
@@ -10,7 +10,7 @@ export interface IImmutableStorageEntityStorageReceipt {
 	/**
 	 * JSON-LD Context.
 	 */
-	"@context": typeof ImmutableStorageTypes.ContextRoot;
+	"@context": typeof ImmutableStorageContexts.ContextRoot;
 
 	/**
 	 * JSON-LD Type.
