@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/immutable-storage-rest-client",
-	"version": "0.0.1-next.23",
+	"version": "0.0.1-next.24",
 	"description": "Immutable Storage contract implementation which can connect to REST endpoints",
 	"repository": {
 		"type": "git",
@@ -35,7 +35,7 @@
 		"@twin.org/core": "next",
 		"@twin.org/entity": "next",
 		"@twin.org/nameof": "next",
-		"@twin.org/immutable-storage-models": "0.0.1-next.23",
+		"@twin.org/immutable-storage-models": "0.0.1-next.24",
 		"@twin.org/web": "next"
 	},
 	"devDependencies": {

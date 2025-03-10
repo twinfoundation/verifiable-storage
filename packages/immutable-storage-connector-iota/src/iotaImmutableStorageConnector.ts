@@ -281,7 +281,7 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 
 			txb.moveCall({
 				target: `${packageId}::${moduleName}::store_data`,
-				arguments: [txb.pure.string(Converter.bytesToHex(data))]
+				arguments: [txb.pure.string(Converter.bytesToBase64(data))]
 			});
 
 			const seed = await Iota.getSeed(this._config, this._vaultConnector, controller);
@@ -408,8 +408,8 @@ export class IotaImmutableStorageConnector implements IImmutableStorageConnector
 			let dataResult: Uint8Array | undefined;
 
 			if (includeData) {
-				const hexString = fields.data;
-				dataResult = Converter.hexToBytes(hexString);
+				const base64String = fields.data;
+				dataResult = Converter.base64ToBytes(base64String);
 			}
 
 			return {
