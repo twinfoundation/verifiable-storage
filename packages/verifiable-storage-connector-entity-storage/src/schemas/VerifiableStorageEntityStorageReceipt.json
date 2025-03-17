@@ -1,0 +1,26 @@
+{
+	"type": "object",
+	"properties": {
+		"@context": {
+			"type": "string",
+			"const": "https://schema.twindev.org/verifiable-storage/",
+			"description": "JSON-LD Context."
+		},
+		"type": {
+			"type": "string",
+			"const": "VerifiableStorageEntityStorageReceipt",
+			"description": "JSON-LD Type."
+		},
+		"entityStorageId": {
+			"type": "string",
+			"description": "The entity storage Id."
+		}
+	},
+	"required": [
+		"@context",
+		"type",
+		"entityStorageId"
+	],
+	"additionalProperties": false,
+	"description": "Receipt for the entity storage Verifiable Storage connector."
+}

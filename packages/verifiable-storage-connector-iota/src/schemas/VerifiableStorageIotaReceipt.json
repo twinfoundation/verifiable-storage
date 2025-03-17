@@ -1,0 +1,21 @@
+{
+	"type": "object",
+	"properties": {
+		"@context": {
+			"type": "string",
+			"const": "https://schema.twindev.org/verifiable-storage/",
+			"description": "JSON-LD Context."
+		},
+		"type": {
+			"type": "string",
+			"const": "VerifiableStorageIotaReceipt",
+			"description": "JSON-LD Type."
+		}
+	},
+	"required": [
+		"@context",
+		"type"
+	],
+	"additionalProperties": false,
+	"description": "Receipt for the IOTA Verifiable Storage connector."
+}
