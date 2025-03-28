@@ -1,6 +1,6 @@
 # Interface: IVerifiableStorageConnector
 
-Interface describing an verifiable storage connector.
+Interface describing a verifiable storage connector.
 
 ## Extends
 

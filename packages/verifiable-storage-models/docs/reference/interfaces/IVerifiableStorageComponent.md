@@ -1,6 +1,6 @@
 # Interface: IVerifiableStorageComponent
 
-Interface describing an Verifiable Storage component.
+Interface describing a Verifiable Storage component.
 
 ## Extends
 

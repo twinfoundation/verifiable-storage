@@ -4,7 +4,7 @@ import type { IComponent } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 
 /**
- * Interface describing an verifiable storage connector.
+ * Interface describing a verifiable storage connector.
  */
 export interface IVerifiableStorageConnector extends IComponent {
 	/**
