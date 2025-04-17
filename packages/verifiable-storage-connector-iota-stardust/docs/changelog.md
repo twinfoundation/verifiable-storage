@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota-stardust - Changelog
 
+## [0.0.1-next.4](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-stardust-v0.0.1-next.3...verifiable-storage-connector-iota-stardust-v0.0.1-next.4) (2025-04-17)
+
+
+### Features
+
+* use shared store mechanism ([#8](https://github.com/twinfoundation/verifiable-storage/issues/8)) ([8c8ecb8](https://github.com/twinfoundation/verifiable-storage/commit/8c8ecb83d32431952c594ea23d37040991f5b4d3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.3 to 0.0.1-next.4
+
 ## [0.0.1-next.3](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-stardust-v0.0.1-next.2...verifiable-storage-connector-iota-stardust-v0.0.1-next.3) (2025-04-17)
 
 
