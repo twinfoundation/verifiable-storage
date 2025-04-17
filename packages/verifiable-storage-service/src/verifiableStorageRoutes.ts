@@ -58,7 +58,7 @@ export function generateRestRoutesVerifiableStorage(
 				type: nameof<IVerifiableStorageCreateRequest>(),
 				examples: [
 					{
-						id: "verifiableStorageCreateExample",
+						id: "verifiableStorageCreateRequestExample",
 						request: {
 							body: {
 								data: "SGVsbG8gd29ybGQ="
@@ -106,7 +106,7 @@ export function generateRestRoutesVerifiableStorage(
 				type: nameof<IVerifiableStorageUpdateRequest>(),
 				examples: [
 					{
-						id: "verifiableStorageUpdateExample",
+						id: "verifiableStorageUpdateRequestExample",
 						request: {
 							pathParams: {
 								id: "verifiable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
@@ -147,7 +147,7 @@ export function generateRestRoutesVerifiableStorage(
 			type: nameof<IVerifiableStorageGetRequest>(),
 			examples: [
 				{
-					id: "verifiableStorageGetExample",
+					id: "verifiableStorageGetRequestExample",
 					request: {
 						pathParams: {
 							id: "verifiable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
@@ -191,7 +191,7 @@ export function generateRestRoutesVerifiableStorage(
 			type: nameof<IVerifiableStorageRemoveRequest>(),
 			examples: [
 				{
-					id: "verifiableStorageRemoveExample",
+					id: "verifiableStorageRemoveRequestExample",
 					request: {
 						pathParams: {
 							id: "verifiable:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
