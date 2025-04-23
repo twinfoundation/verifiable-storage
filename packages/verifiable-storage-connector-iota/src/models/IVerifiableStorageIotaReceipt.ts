@@ -18,7 +18,12 @@ export interface IVerifiableStorageIotaReceipt {
 	type: typeof IotaVerifiableStorageTypes.IotaReceipt;
 
 	/**
-	 * The timestamp of the transaction.
+	 * The epoch of the transaction.
 	 */
-	timestamp: string;
+	epoch: string;
+
+	/**
+	 * The digest of the transaction.
+	 */
+	digest: string;
 }

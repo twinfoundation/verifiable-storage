@@ -323,7 +323,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				event.type.includes("verifiable_storage::StorageCreated")
 			);
 
-			const parsedJson = storageEvent?.parsedJson as { id: string; timestamp: string };
+			const parsedJson = storageEvent?.parsedJson as { id: string; epoch: string };
 
 			const objectId = parsedJson?.id;
 
@@ -337,12 +337,13 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			const receipt: IVerifiableStorageIotaReceipt = {
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
-				timestamp: parsedJson?.timestamp ?? "0"
+				epoch: parsedJson?.epoch ?? "",
+				digest: result?.digest ?? ""
 			};
 
 			const urn = new Urn(
 				"verifiable",
-				`${IotaVerifiableStorageConnector.NAMESPACE}:${this._config.network}:${this._packageId}:${objectId}`
+				`${IotaVerifiableStorageConnector.NAMESPACE}:${this._packageId}:${objectId}`
 			);
 
 			return {
@@ -427,12 +428,13 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				event.type.includes("verifiable_storage::StorageUpdated")
 			);
 
-			const parsedJson = storageEvent?.parsedJson as { id: string; timestamp: string };
+			const parsedJson = storageEvent?.parsedJson as { id: string; epoch: string };
 
 			const receipt: IVerifiableStorageIotaReceipt = {
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
-				timestamp: parsedJson.timestamp ?? "0"
+				epoch: parsedJson?.epoch ?? "",
+				digest: result?.digest ?? ""
 			};
 
 			return receipt as unknown as IJsonLdNodeObject;
@@ -484,17 +486,18 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			const parsedData = objectData.data.content as unknown as {
 				fields: {
 					data: string;
-					timestamp: string;
+					epoch: string;
 					creator: string;
 				};
 			};
 
 			const fields = parsedData.fields;
 
-			const receipt = {
+			const receipt: IVerifiableStorageIotaReceipt = {
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
-				timestamp: fields.timestamp
+				epoch: fields.epoch ?? "",
+				digest: objectData.data?.digest ?? ""
 			};
 
 			let dataResult: Uint8Array | undefined;
@@ -506,7 +509,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 
 			return {
 				data: dataResult,
-				receipt: receipt as IJsonLdNodeObject
+				receipt: receipt as unknown as IJsonLdNodeObject
 			};
 		} catch (error) {
 			if (error instanceof GeneralError) {

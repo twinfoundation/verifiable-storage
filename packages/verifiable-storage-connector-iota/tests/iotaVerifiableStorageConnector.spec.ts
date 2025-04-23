@@ -11,6 +11,7 @@ import {
 	TEST_EXPLORER_URL
 } from "./setupTestEnv";
 import { IotaVerifiableStorageConnector } from "../src/iotaVerifiableStorageConnector";
+import type { IVerifiableStorageIotaReceipt } from "../src/models/IVerifiableStorageIotaReceipt";
 
 let verifiableDeployerConnector: IotaVerifiableStorageConnector;
 let verifiableUserConnector: IotaVerifiableStorageConnector;
@@ -65,24 +66,32 @@ describe("IotaVerifiableStorageConnector", () => {
 		expect(urn.namespaceIdentifier()).toEqual("verifiable");
 		const specificParts = urn.namespaceSpecificParts();
 		expect(specificParts[0]).toEqual("iota");
-		expect(specificParts[1]).toEqual(TEST_NETWORK);
+		expect(specificParts[1].length).toBeGreaterThan(0);
 		expect(specificParts[2].length).toBeGreaterThan(0);
-		expect(specificParts[3].length).toBeGreaterThan(0);
 
 		console.debug(
 			"Created",
 			`${TEST_EXPLORER_URL}object/${specificParts[3]}?network=${TEST_NETWORK}`
 		);
 
-		expect(result.receipt["@context"]).toEqual("https://schema.twindev.org/verifiable-storage/");
-		expect(result.receipt.type).toEqual("VerifiableStorageIotaReceipt");
+		const receipt = result.receipt as unknown as IVerifiableStorageIotaReceipt;
+
+		expect(receipt["@context"]).toEqual("https://schema.twindev.org/verifiable-storage/");
+		expect(receipt.type).toEqual("VerifiableStorageIotaReceipt");
+		expect(receipt.epoch.length).greaterThan(0);
+		expect(receipt.digest.length).greaterThan(0);
 	});
 
 	test("Can update a verifiable item", async () => {
 		const data = Converter.utf8ToBytes("Hello, IOTA  Verifiable Storage Updated!");
 		const result = await verifiableUserConnector.update(TEST_USER_IDENTITY_ID, itemId, data);
-		expect(result["@context"]).toEqual("https://schema.twindev.org/verifiable-storage/");
-		expect(result.type).toEqual("VerifiableStorageIotaReceipt");
+
+		const receipt = result as unknown as IVerifiableStorageIotaReceipt;
+
+		expect(receipt["@context"]).toEqual("https://schema.twindev.org/verifiable-storage/");
+		expect(receipt.type).toEqual("VerifiableStorageIotaReceipt");
+		expect(receipt.epoch.length).greaterThan(0);
+		expect(receipt.digest.length).greaterThan(0);
 	});
 
 	test("Can retrieve a verifiable item", async () => {
@@ -90,7 +99,12 @@ describe("IotaVerifiableStorageConnector", () => {
 		expect(getResult.data).toEqual(
 			Converter.utf8ToBytes("Hello, IOTA  Verifiable Storage Updated!")
 		);
-		expect(getResult.receipt.type).toEqual("VerifiableStorageIotaReceipt");
+		const receipt = getResult.receipt as unknown as IVerifiableStorageIotaReceipt;
+
+		expect(receipt["@context"]).toEqual("https://schema.twindev.org/verifiable-storage/");
+		expect(receipt.type).toEqual("VerifiableStorageIotaReceipt");
+		expect(receipt.epoch.length).greaterThan(0);
+		expect(receipt.digest.length).greaterThan(0);
 	});
 
 	test("Can remove a verifiable item", async () => {
