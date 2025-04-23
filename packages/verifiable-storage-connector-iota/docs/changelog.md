@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota - Changelog
 
+## [0.0.1-next.6](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.5...verifiable-storage-connector-iota-v0.0.1-next.6) (2025-04-23)
+
+
+### Features
+
+* add epoch and digest to receipt ([#12](https://github.com/twinfoundation/verifiable-storage/issues/12)) ([cd4cfa6](https://github.com/twinfoundation/verifiable-storage/commit/cd4cfa6bee19ee9b9896447d0b773bffd57fddf1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.5 to 0.0.1-next.6
+
 ## [0.0.1-next.5](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.4...verifiable-storage-connector-iota-v0.0.1-next.5) (2025-04-23)
 
 
