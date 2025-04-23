@@ -5,7 +5,7 @@ import { Transaction } from "@iota/iota-sdk/transactions";
 import { BaseError, Converter, GeneralError, Guards, Is, StringHelper, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { Iota, type IIotaDryRun } from "@twin.org/dlt-iota";
-import { type ILoggingConnector, LoggingConnectorFactory } from "@twin.org/logging-models";
+import { LoggingConnectorFactory, type ILoggingConnector } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import {
@@ -17,6 +17,7 @@ import { IotaVerifiableStorageUtils } from "./iotaVerifiableStorageUtils";
 import type { IIotaVerifiableStorageConnectorConfig } from "./models/IIotaVerifiableStorageConnectorConfig";
 import type { IIotaVerifiableStorageConnectorConstructorOptions } from "./models/IIotaVerifiableStorageConnectorConstructorOptions";
 import { IotaVerifiableStorageTypes } from "./models/iotaVerifiableStorageTypes";
+import type { IVerifiableStorageIotaReceipt } from "./models/IVerifiableStorageIotaReceipt";
 
 /**
  * Class for performing verifiable storage operations on IOTA.
@@ -322,7 +323,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				event.type.includes("verifiable_storage::StorageCreated")
 			);
 
-			const parsedJson = storageEvent?.parsedJson as { id: string };
+			const parsedJson = storageEvent?.parsedJson as { id: string; timestamp: string };
 
 			const objectId = parsedJson?.id;
 
@@ -333,10 +334,10 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				});
 			}
 
-			const receipt = {
+			const receipt: IVerifiableStorageIotaReceipt = {
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
-				timestamp: Number(storageEvent?.timestampMs ?? Date.now())
+				timestamp: parsedJson?.timestamp ?? "0"
 			};
 
 			const urn = new Urn(
@@ -346,7 +347,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 
 			return {
 				id: urn.toString(),
-				receipt: receipt as IJsonLdNodeObject
+				receipt: receipt as unknown as IJsonLdNodeObject
 			};
 		} catch (error) {
 			throw new GeneralError(
@@ -422,23 +423,19 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				});
 			}
 
-			if (result.effects?.status?.status !== "success") {
-				throw new GeneralError(this.CLASS_NAME, "storingTransactionFailed", {
-					error: result.effects?.status?.error
-				});
-			}
-
 			const storageEvent = result.events?.find(event =>
-				event.type.includes("verifiable_storage::StorageCreated")
+				event.type.includes("verifiable_storage::StorageUpdated")
 			);
 
-			const receipt = {
+			const parsedJson = storageEvent?.parsedJson as { id: string; timestamp: string };
+
+			const receipt: IVerifiableStorageIotaReceipt = {
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
-				timestamp: Number(storageEvent?.timestampMs ?? Date.now())
+				timestamp: parsedJson.timestamp ?? "0"
 			};
 
-			return receipt;
+			return receipt as unknown as IJsonLdNodeObject;
 		} catch (error) {
 			if (error instanceof GeneralError) {
 				throw error;
@@ -497,7 +494,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			const receipt = {
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
-				timestamp: Number(fields.timestamp)
+				timestamp: fields.timestamp
 			};
 
 			let dataResult: Uint8Array | undefined;

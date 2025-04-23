@@ -10,11 +10,16 @@
 			"type": "string",
 			"const": "VerifiableStorageIotaReceipt",
 			"description": "JSON-LD Type."
+		},
+		"timestamp": {
+			"type": "string",
+			"description": "The timestamp of the transaction."
 		}
 	},
 	"required": [
 		"@context",
-		"type"
+		"type",
+		"timestamp"
 	],
 	"additionalProperties": false,
 	"description": "Receipt for the IOTA Verifiable Storage connector."
