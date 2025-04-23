@@ -19,32 +19,10 @@ export class IotaVerifiableStorageUtils {
 	 * @throws GeneralError if the verifiable storage id is invalid.
 	 */
 	public static verifiableStorageIdToObjectId(verifiableStorageIdUrn: string): string {
-		// The verifiableStorageId is made up from verifiable-storage:iota:devnet:packageId:objectid
+		// The verifiableStorageId is made up from verifiable-storage:iota:packageId:objectid
 		const verifiableStorageUrn = Urn.fromValidString(verifiableStorageIdUrn);
 		const parts = verifiableStorageUrn.parts();
-		if (parts.length !== 5) {
-			throw new GeneralError(
-				IotaVerifiableStorageUtils.CLASS_NAME,
-				"invalidVerifiableStorageIdFormat",
-				{
-					id: verifiableStorageIdUrn
-				}
-			);
-		}
-		return parts[4];
-	}
-
-	/**
-	 * Convert a verifiable storage id to a package id.
-	 * @param verifiableStorageIdUrn The verifiable storage id to convert in urn format.
-	 * @returns The package id.
-	 * @throws GeneralError if the verifiable storage id is invalid.
-	 */
-	public static verifiableStorageIdToPackageId(verifiableStorageIdUrn: string): string {
-		// The verifiableStorageId is made up from verifiable-storage:iota:devnet:packageId:objectid
-		const verifiableStorageUrn = Urn.fromValidString(verifiableStorageIdUrn);
-		const parts = verifiableStorageUrn.parts();
-		if (parts.length !== 5) {
+		if (parts.length !== 4) {
 			throw new GeneralError(
 				IotaVerifiableStorageUtils.CLASS_NAME,
 				"invalidVerifiableStorageIdFormat",
@@ -54,5 +32,27 @@ export class IotaVerifiableStorageUtils {
 			);
 		}
 		return parts[3];
+	}
+
+	/**
+	 * Convert a verifiable storage id to a package id.
+	 * @param verifiableStorageIdUrn The verifiable storage id to convert in urn format.
+	 * @returns The package id.
+	 * @throws GeneralError if the verifiable storage id is invalid.
+	 */
+	public static verifiableStorageIdToPackageId(verifiableStorageIdUrn: string): string {
+		// The verifiableStorageId is made up from verifiable-storage:iota:packageId:objectid
+		const verifiableStorageUrn = Urn.fromValidString(verifiableStorageIdUrn);
+		const parts = verifiableStorageUrn.parts();
+		if (parts.length !== 4) {
+			throw new GeneralError(
+				IotaVerifiableStorageUtils.CLASS_NAME,
+				"invalidVerifiableStorageIdFormat",
+				{
+					id: verifiableStorageIdUrn
+				}
+			);
+		}
+		return parts[2];
 	}
 }

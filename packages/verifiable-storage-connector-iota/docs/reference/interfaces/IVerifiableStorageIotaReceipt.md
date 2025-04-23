@@ -20,8 +20,16 @@ JSON-LD Type.
 
 ***
 
-### timestamp
+### epoch
 
-> **timestamp**: `string`
+> **epoch**: `string`
 
-The timestamp of the transaction.
+The epoch of the transaction.
+
+***
+
+### digest
+
+> **digest**: `string`
+
+The digest of the transaction.
