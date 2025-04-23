@@ -475,7 +475,8 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			const objectData = await this._client.getObject({
 				id: objectId,
 				options: {
-					showContent: true
+					showContent: true,
+					showPreviousTransaction: true
 				}
 			});
 
@@ -497,7 +498,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
 				epoch: fields.epoch ?? "",
-				digest: objectData.data?.digest ?? ""
+				digest: objectData.data?.previousTransaction ?? ""
 			};
 
 			let dataResult: Uint8Array | undefined;

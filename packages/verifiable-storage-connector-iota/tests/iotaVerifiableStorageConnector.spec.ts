@@ -17,6 +17,7 @@ let verifiableDeployerConnector: IotaVerifiableStorageConnector;
 let verifiableUserConnector: IotaVerifiableStorageConnector;
 
 let itemId: string;
+let digest: string;
 
 describe("IotaVerifiableStorageConnector", () => {
 	beforeAll(async () => {
@@ -59,7 +60,7 @@ describe("IotaVerifiableStorageConnector", () => {
 	});
 
 	test("Can store a verifiable item", async () => {
-		const data = Converter.utf8ToBytes("Hello, IOTA  Verifiable Storage!");
+		const data = Converter.utf8ToBytes("Hello, IOTA Verifiable Storage!");
 		const result = await verifiableUserConnector.create(TEST_USER_IDENTITY_ID, data);
 		itemId = result.id;
 		const urn = Urn.fromValidString(result.id);
@@ -71,7 +72,7 @@ describe("IotaVerifiableStorageConnector", () => {
 
 		console.debug(
 			"Created",
-			`${TEST_EXPLORER_URL}object/${specificParts[3]}?network=${TEST_NETWORK}`
+			`${TEST_EXPLORER_URL}object/${specificParts[2]}?network=${TEST_NETWORK}`
 		);
 
 		const receipt = result.receipt as unknown as IVerifiableStorageIotaReceipt;
@@ -80,10 +81,34 @@ describe("IotaVerifiableStorageConnector", () => {
 		expect(receipt.type).toEqual("VerifiableStorageIotaReceipt");
 		expect(receipt.epoch.length).greaterThan(0);
 		expect(receipt.digest.length).greaterThan(0);
+
+		digest = receipt.digest;
+
+		console.debug(
+			"Digest",
+			`${TEST_EXPLORER_URL}txblock/${receipt.digest}?network=${TEST_NETWORK}`
+		);
+	});
+
+	test("Can retrieve a verifiable item", async () => {
+		const getResult = await verifiableUserConnector.get(itemId);
+		expect(getResult.data).toEqual(Converter.utf8ToBytes("Hello, IOTA Verifiable Storage!"));
+		const receipt = getResult.receipt as unknown as IVerifiableStorageIotaReceipt;
+
+		expect(receipt["@context"]).toEqual("https://schema.twindev.org/verifiable-storage/");
+		expect(receipt.type).toEqual("VerifiableStorageIotaReceipt");
+		expect(receipt.epoch.length).greaterThan(0);
+		expect(receipt.digest.length).greaterThan(0);
+		expect(receipt.digest).toEqual(digest);
+
+		console.debug(
+			"Digest",
+			`${TEST_EXPLORER_URL}txblock/${receipt.digest}?network=${TEST_NETWORK}`
+		);
 	});
 
 	test("Can update a verifiable item", async () => {
-		const data = Converter.utf8ToBytes("Hello, IOTA  Verifiable Storage Updated!");
+		const data = Converter.utf8ToBytes("Hello, IOTA Verifiable Storage Updated!");
 		const result = await verifiableUserConnector.update(TEST_USER_IDENTITY_ID, itemId, data);
 
 		const receipt = result as unknown as IVerifiableStorageIotaReceipt;
@@ -92,12 +117,19 @@ describe("IotaVerifiableStorageConnector", () => {
 		expect(receipt.type).toEqual("VerifiableStorageIotaReceipt");
 		expect(receipt.epoch.length).greaterThan(0);
 		expect(receipt.digest.length).greaterThan(0);
+
+		digest = receipt.digest;
+
+		console.debug(
+			"Digest",
+			`${TEST_EXPLORER_URL}txblock/${receipt.digest}?network=${TEST_NETWORK}`
+		);
 	});
 
-	test("Can retrieve a verifiable item", async () => {
+	test("Can retrieve an updated verifiable item", async () => {
 		const getResult = await verifiableUserConnector.get(itemId);
 		expect(getResult.data).toEqual(
-			Converter.utf8ToBytes("Hello, IOTA  Verifiable Storage Updated!")
+			Converter.utf8ToBytes("Hello, IOTA Verifiable Storage Updated!")
 		);
 		const receipt = getResult.receipt as unknown as IVerifiableStorageIotaReceipt;
 
@@ -105,6 +137,12 @@ describe("IotaVerifiableStorageConnector", () => {
 		expect(receipt.type).toEqual("VerifiableStorageIotaReceipt");
 		expect(receipt.epoch.length).greaterThan(0);
 		expect(receipt.digest.length).greaterThan(0);
+		expect(receipt.digest).toEqual(digest);
+
+		console.debug(
+			"Digest",
+			`${TEST_EXPLORER_URL}txblock/${receipt.digest}?network=${TEST_NETWORK}`
+		);
 	});
 
 	test("Can remove a verifiable item", async () => {
