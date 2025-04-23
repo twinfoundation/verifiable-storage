@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota - Changelog
 
+## [0.0.1-next.7](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.6...verifiable-storage-connector-iota-v0.0.1-next.7) (2025-04-23)
+
+
+### Bug Fixes
+
+* iota get digest to match last update ([53690a0](https://github.com/twinfoundation/verifiable-storage/commit/53690a0ffa9d38a69d184c90f975cc67199a5808))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.6 to 0.0.1-next.7
+
 ## [0.0.1-next.6](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.5...verifiable-storage-connector-iota-v0.0.1-next.6) (2025-04-23)
 
 
