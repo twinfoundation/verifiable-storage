@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota - Changelog
 
+## [0.0.1-next.5](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.4...verifiable-storage-connector-iota-v0.0.1-next.5) (2025-04-23)
+
+
+### Bug Fixes
+
+* add missing iota receipt data ([#10](https://github.com/twinfoundation/verifiable-storage/issues/10)) ([b83c79f](https://github.com/twinfoundation/verifiable-storage/commit/b83c79fb453bb45af7c347dd7688eddbafdb442e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.4 to 0.0.1-next.5
+
 ## [0.0.1-next.4](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.3...verifiable-storage-connector-iota-v0.0.1-next.4) (2025-04-17)
 
 
