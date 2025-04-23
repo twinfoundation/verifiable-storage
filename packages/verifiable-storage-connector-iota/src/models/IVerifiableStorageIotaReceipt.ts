@@ -16,4 +16,9 @@ export interface IVerifiableStorageIotaReceipt {
 	 * JSON-LD Type.
 	 */
 	type: typeof IotaVerifiableStorageTypes.IotaReceipt;
+
+	/**
+	 * The timestamp of the transaction.
+	 */
+	timestamp: string;
 }
