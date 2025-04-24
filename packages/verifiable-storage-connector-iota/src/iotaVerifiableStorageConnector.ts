@@ -160,6 +160,8 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 							packageId: this._packageId
 						}
 					});
+
+					return;
 				}
 			}
 
