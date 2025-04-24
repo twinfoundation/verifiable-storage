@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota - Changelog
 
+## [0.0.1-next.8](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.7...verifiable-storage-connector-iota-v0.0.1-next.8) (2025-04-24)
+
+
+### Bug Fixes
+
+* return if package already deployed ([dd859ca](https://github.com/twinfoundation/verifiable-storage/commit/dd859caadb7fa8323e214f6920e61e96202b4039))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.7 to 0.0.1-next.8
+
 ## [0.0.1-next.7](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.6...verifiable-storage-connector-iota-v0.0.1-next.7) (2025-04-23)
 
 
