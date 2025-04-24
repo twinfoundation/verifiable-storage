@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota-stardust - Changelog
 
+## [0.0.1-next.8](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-stardust-v0.0.1-next.7...verifiable-storage-connector-iota-stardust-v0.0.1-next.8) (2025-04-24)
+
+
+### Miscellaneous Chores
+
+* **verifiable-storage-connector-iota-stardust:** Synchronize repo versions
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.7 to 0.0.1-next.8
+
 ## [0.0.1-next.7](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-stardust-v0.0.1-next.6...verifiable-storage-connector-iota-stardust-v0.0.1-next.7) (2025-04-23)
 
 
