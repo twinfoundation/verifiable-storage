@@ -24,11 +24,6 @@
 			"changelog-path": "docs/changelog.md",
 			"extra-files": ["src/index.ts"]
 		},
-		"packages/verifiable-storage-connector-iota-stardust": {
-			"package-name": "verifiable-storage-connector-iota-stardust",
-			"changelog-path": "docs/changelog.md",
-			"extra-files": ["src/index.ts"]
-		},
 		"packages/verifiable-storage-service": {
 			"package-name": "verifiable-storage-service",
 			"changelog-path": "docs/changelog.md",
@@ -49,7 +44,6 @@
 				"verifiable-storage-models",
 				"verifiable-storage-connector-entity-storage",
 				"verifiable-storage-connector-iota",
-				"verifiable-storage-connector-iota-stardust",
 				"verifiable-storage-service",
 				"verifiable-storage-rest-client"
 			]
