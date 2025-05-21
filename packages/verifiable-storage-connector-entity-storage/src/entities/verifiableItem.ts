@@ -14,14 +14,20 @@ export class VerifiableItem {
 	public id!: string;
 
 	/**
-	 * The controller of the item.
+	 * The creator of the item.
 	 */
 	@property({ type: "string" })
-	public controller!: string;
+	public creator!: string;
 
 	/**
 	 * The data base64 encoded.
 	 */
 	@property({ type: "string" })
 	public data!: string;
+
+	/**
+	 * The allow list for modifying the data.
+	 */
+	@property({ type: "array", itemTypeRef: "string" })
+	public allowlist!: string[];
 }

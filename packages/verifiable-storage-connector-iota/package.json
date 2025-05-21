@@ -41,8 +41,7 @@
 		"@twin.org/verifiable-storage-models": "0.0.1-next.9",
 		"@twin.org/logging-models": "next",
 		"@twin.org/nameof": "next",
-		"@twin.org/vault-models": "next",
-		"@twin.org/wallet-models": "next"
+		"@twin.org/vault-models": "next"
 	},
 	"devDependencies": {
 		"@rollup/plugin-json": "^6.1.0",

@@ -2,9 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IotaClient } from "@iota/iota-sdk/client";
 import { Transaction } from "@iota/iota-sdk/transactions";
-import { BaseError, Converter, GeneralError, Guards, Is, StringHelper, Urn } from "@twin.org/core";
+import {
+	BaseError,
+	Converter,
+	GeneralError,
+	Guards,
+	Is,
+	StringHelper,
+	UnauthorizedError,
+	Urn
+} from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
-import { Iota, type IIotaDryRun } from "@twin.org/dlt-iota";
+import { Iota } from "@twin.org/dlt-iota";
 import { LoggingConnectorFactory, type ILoggingConnector } from "@twin.org/logging-models";
 import { nameof } from "@twin.org/nameof";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
@@ -191,22 +200,16 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			// Transfer the upgrade capability to the controller
 			txb.transferObjects([upgradeCap], txb.pure.address(controllerAddress));
 
-			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
-			if (this._config.enableCostLogging) {
-				await this.dryRunTransaction(txb, nodeIdentity, "deploy");
-			}
-
-			const result = await Iota.prepareAndPostStorageTransaction(
+			const result = await Iota.prepareAndPostTransaction(
 				this._config,
 				this._vaultConnector,
+				nodeLogging,
 				nodeIdentity,
 				this._client,
+				controllerAddress,
+				txb,
 				{
-					owner: controllerAddress,
-					transaction: txb,
-					showEffects: true,
-					showEvents: true,
-					showObjectChanges: true
+					dryRunLabel: this._config.enableCostLogging ? "deploy" : undefined
 				}
 			);
 
@@ -262,11 +265,13 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * Create an item in verifiable storage.
 	 * @param controller The identity of the user to access the vault keys.
 	 * @param data The data to store.
+	 * @param allowList The list of identities that are allowed to modify the item.
 	 * @returns The id of the stored verifiable item in URN format and the receipt.
 	 */
 	public async create(
 		controller: string,
-		data: Uint8Array
+		data: Uint8Array,
+		allowList?: string[]
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
@@ -274,6 +279,9 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 		this.ensureStarted();
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
+		if (!Is.empty(allowList)) {
+			Guards.array<string>(this.CLASS_NAME, nameof(allowList), allowList);
+		}
 
 		try {
 			const txb = new Transaction();
@@ -284,7 +292,10 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 
 			txb.moveCall({
 				target: `${packageId}::${moduleName}::store_data`,
-				arguments: [txb.pure.string(Converter.bytesToBase64(data))]
+				arguments: [
+					txb.pure.string(Converter.bytesToBase64(data)),
+					txb.pure.vector("address", allowList ?? [])
+				]
 			});
 
 			const seed = await Iota.getSeed(this._config, this._vaultConnector, controller);
@@ -296,22 +307,16 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				1
 			);
 
-			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
-			if (this._config.enableCostLogging) {
-				await this.dryRunTransaction(txb, controller, "store");
-			}
-
-			const result = await Iota.prepareAndPostStorageTransaction(
+			const result = await Iota.prepareAndPostTransaction(
 				this._config,
 				this._vaultConnector,
+				this._logging,
 				controller,
 				this._client,
+				addresses[0],
+				txb,
 				{
-					owner: addresses[0],
-					transaction: txb,
-					showEffects: true,
-					showEvents: true,
-					showObjectChanges: true
+					dryRunLabel: this._config.enableCostLogging ? "store" : undefined
 				}
 			);
 
@@ -367,16 +372,23 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * @param controller The identity of the user to access the vault keys.
 	 * @param id The id of the item to update.
 	 * @param data The data to store.
+	 * @param allowList Updated list of identities that are allowed to modify the item.
 	 * @returns The updated receipt.
 	 */
 	public async update(
 		controller: string,
 		id: string,
-		data: Uint8Array
+		data?: Uint8Array,
+		allowList?: string[]
 	): Promise<IJsonLdNodeObject> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
+		if (!Is.empty(data)) {
+			Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
+		}
+		if (!Is.empty(allowList)) {
+			Guards.array<string>(this.CLASS_NAME, nameof(allowList), allowList);
+		}
 
 		const objectId = IotaVerifiableStorageUtils.verifiableStorageIdToObjectId(id);
 
@@ -389,7 +401,13 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 
 			txb.moveCall({
 				target: `${packageId}::${moduleName}::update_data`,
-				arguments: [txb.object(objectId), txb.pure.string(Converter.bytesToBase64(data))]
+				arguments: [
+					txb.object(objectId),
+					txb.pure.string(Is.empty(data) ? "" : Converter.bytesToBase64(data)),
+					txb.pure.vector("address", allowList ?? []),
+					// If the allowlist is an array with no elements, we need to set the remove_allowlist flag
+					txb.pure.bool(Is.array(allowList) && allowList.length === 0)
+				]
 			});
 
 			const seed = await Iota.getSeed(this._config, this._vaultConnector, controller);
@@ -401,22 +419,16 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				1
 			);
 
-			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
-			if (this._config.enableCostLogging) {
-				await this.dryRunTransaction(txb, controller, "update");
-			}
-
-			const result = await Iota.prepareAndPostNftTransaction(
+			const result = await Iota.prepareAndPostTransaction(
 				this._config,
 				this._vaultConnector,
+				this._logging,
 				controller,
 				this._client,
+				addresses[0],
+				txb,
 				{
-					owner: addresses[0],
-					transaction: txb,
-					showEffects: true,
-					showEvents: true,
-					showObjectChanges: true
+					dryRunLabel: this._config.enableCostLogging ? "update" : undefined
 				}
 			);
 
@@ -441,16 +453,20 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 
 			return receipt as unknown as IJsonLdNodeObject;
 		} catch (error) {
+			if (Iota.isAbortError(error, 401)) {
+				throw new UnauthorizedError(this.CLASS_NAME, "notInAllowList", error);
+			}
+
 			if (error instanceof GeneralError) {
 				throw error;
-			} else {
-				throw new GeneralError(
-					this.CLASS_NAME,
-					"updatingFailed",
-					undefined,
-					Iota.extractPayloadError(error)
-				);
 			}
+
+			throw new GeneralError(
+				this.CLASS_NAME,
+				"updatingFailed",
+				undefined,
+				Iota.extractPayloadError(error)
+			);
 		}
 	}
 
@@ -459,18 +475,21 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * @param id The id of the item to get.
 	 * @param options Additional options for getting the item.
 	 * @param options.includeData Should the data be included in the response, defaults to true.
-	 * @returns The data for the item and the receipt.
+	 * @param options.includeAllowList Should the allow list be included in the response, defaults to true.
+	 * @returns The data for the item, the receipt and the allowlist.
 	 */
 	public async get(
 		id: string,
-		options?: { includeData?: boolean }
+		options?: { includeData?: boolean; includeAllowList?: boolean }
 	): Promise<{
 		data?: Uint8Array;
 		receipt: IJsonLdNodeObject;
+		allowList?: string[];
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(id), id);
 
 		const includeData = options?.includeData ?? true;
+		const includeAllowList = options?.includeAllowList ?? true;
 		const objectId = IotaVerifiableStorageUtils.verifiableStorageIdToObjectId(id);
 
 		try {
@@ -491,28 +510,28 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 					data: string;
 					epoch: string;
 					creator: string;
+					allowlist: string[];
 				};
 			};
-
-			const fields = parsedData.fields;
 
 			const receipt: IVerifiableStorageIotaReceipt = {
 				"@context": VerifiableStorageContexts.ContextRoot,
 				type: IotaVerifiableStorageTypes.IotaReceipt,
-				epoch: fields.epoch ?? "",
+				epoch: parsedData.fields.epoch ?? "",
 				digest: objectData.data?.previousTransaction ?? ""
 			};
 
 			let dataResult: Uint8Array | undefined;
 
 			if (includeData) {
-				const base64String = fields.data;
+				const base64String = parsedData.fields.data;
 				dataResult = Converter.base64ToBytes(base64String);
 			}
 
 			return {
 				data: dataResult,
-				receipt: receipt as unknown as IJsonLdNodeObject
+				receipt: receipt as unknown as IJsonLdNodeObject,
+				allowList: includeAllowList ? parsedData.fields.allowlist : undefined
 			};
 		} catch (error) {
 			if (error instanceof GeneralError) {
@@ -569,22 +588,16 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				arguments: [txb.object(objectId)]
 			});
 
-			// Dry run the transaction if cost logging is enabled to get the gas and storage costs
-			if (this._config.enableCostLogging) {
-				await this.dryRunTransaction(txb, controller, "remove");
-			}
-
-			const result = await Iota.prepareAndPostNftTransaction(
+			const result = await Iota.prepareAndPostTransaction(
 				this._config,
 				this._vaultConnector,
+				this._logging,
 				controller,
 				this._client,
+				addresses[0],
+				txb,
 				{
-					owner: addresses[0],
-					transaction: txb,
-					showEffects: true,
-					showEvents: true,
-					showObjectChanges: true
+					dryRunLabel: this._config.enableCostLogging ? "remove" : undefined
 				}
 			);
 
@@ -594,12 +607,24 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				});
 			}
 		} catch (error) {
-			throw new GeneralError(
-				this.CLASS_NAME,
-				"removingFailed",
-				undefined,
-				Iota.extractPayloadError(error)
-			);
+			if (Iota.isAbortError(error, 401)) {
+				throw new UnauthorizedError(this.CLASS_NAME, "notCreator", error);
+			}
+
+			if (error instanceof GeneralError) {
+				throw error;
+			}
+
+			if (error instanceof GeneralError) {
+				throw error;
+			} else {
+				throw new GeneralError(
+					this.CLASS_NAME,
+					"removingFailed",
+					undefined,
+					Iota.extractPayloadError(error)
+				);
+			}
 		}
 	}
 
@@ -644,30 +669,5 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 */
 	private getModuleName(): string {
 		return StringHelper.snakeCase(this._contractName);
-	}
-
-	/**
-	 * Dry run a transaction.
-	 * @param txb The transaction to dry run.
-	 * @param controller The controller of the transaction.
-	 * @param operation The operation to log.
-	 * @returns void.
-	 */
-	private async dryRunTransaction(
-		txb: Transaction,
-		controller: string,
-		operation: string
-	): Promise<IIotaDryRun> {
-		const controllerAddress = await this.getPackageControllerAddress(controller);
-		const dryRunResponse = await Iota.dryRunTransaction(
-			this._client,
-			this._logging,
-			this.CLASS_NAME,
-			txb,
-			controllerAddress,
-			operation
-		);
-
-		return dryRunResponse;
 	}
 }
