@@ -293,6 +293,9 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 		if (!Is.empty(allowList)) {
 			Guards.array<string>(this.CLASS_NAME, nameof(allowList), allowList);
 		}
+		if (!Is.empty(options?.maxAllowListSize)) {
+			Guards.integer(this.CLASS_NAME, nameof(options.maxAllowListSize), options.maxAllowListSize);
+		}
 
 		try {
 			const txb = new Transaction();
@@ -306,7 +309,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				arguments: [
 					txb.pure.string(Converter.bytesToBase64(data)),
 					txb.pure.vector("address", allowList ?? []),
-					txb.pure.u8(
+					txb.pure.u16(
 						Math.max(
 							options?.maxAllowListSize ?? IotaVerifiableStorageConnector._DEFAULT_ALLOW_LIST_SIZE,
 							1

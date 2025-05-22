@@ -83,6 +83,12 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 	}> {
 		Guards.stringValue(this.CLASS_NAME, nameof(controller), controller);
 		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
+		if (!Is.empty(allowList)) {
+			Guards.array<string>(this.CLASS_NAME, nameof(allowList), allowList);
+		}
+		if (!Is.empty(options?.maxAllowListSize)) {
+			Guards.integer(this.CLASS_NAME, nameof(options.maxAllowListSize), options.maxAllowListSize);
+		}
 
 		try {
 			const itemId = Converter.bytesToHex(RandomHelper.generate(32));

@@ -13,7 +13,7 @@ module 0x0::verifiable_storage {
         version: u8,
         creator: address,
         allowlist: vector<address>,
-		max_allowlist_size: u8
+		max_allowlist_size: u16
     }
 
     struct StorageCreated has copy, drop {
@@ -33,7 +33,7 @@ module 0x0::verifiable_storage {
 
 	/// Store data with an optional allowlist of additional addresses.
     /// If `extra_allowlist` is provided, those addresses are added to the allowlist.
-    public entry fun store_data(data: String, extra_allowlist: vector<address>, max_allowlist_size: u8, ctx: &mut TxContext) {
+    public entry fun store_data(data: String, extra_allowlist: vector<address>, max_allowlist_size: u16, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
         let epoch = tx_context::epoch(ctx);
 
@@ -129,7 +129,7 @@ module 0x0::verifiable_storage {
     }
 
 	// Helper: append unique addresses from src to dest
-	fun append_unique(dest: &mut vector<address>, src: &vector<address>, max_size: u8) {
+	fun append_unique(dest: &mut vector<address>, src: &vector<address>, max_size: u16) {
 		let len = vector::length(src);
 		let i = 0;
 		while (i < len) {
