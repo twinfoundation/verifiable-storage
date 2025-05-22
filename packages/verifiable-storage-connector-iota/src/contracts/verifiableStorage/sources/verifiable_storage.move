@@ -39,7 +39,7 @@ module 0x0::verifiable_storage {
 
 		let allowlist = vector::empty<address>();
         vector::push_back(&mut allowlist, sender);
-		append_unique(&mut allowlist, extra_allowlist, max_allowlist_size);
+		append_unique(&mut allowlist, &extra_allowlist, max_allowlist_size);
 
         let storage = StorageItem {
             id: object::new(ctx),
@@ -47,7 +47,8 @@ module 0x0::verifiable_storage {
             epoch,
             version: 1,
             creator: sender,
-            allowlist
+            allowlist,
+			max_allowlist_size
         };
 
         // optionally emit an event
@@ -79,7 +80,7 @@ module 0x0::verifiable_storage {
 		let allowlist = vector::empty<address>();
 		vector::push_back(&mut allowlist, storage.creator);
         if (!remove_allowlist) {
-			append_unique(&mut allowlist, updated_allowlist, storage.maxAllowListSize);
+			append_unique(&mut allowlist, &updated_allowlist, storage.max_allowlist_size);
 		};
 		storage.allowlist = allowlist;
 
@@ -107,7 +108,8 @@ module 0x0::verifiable_storage {
             epoch: _,
             version: _,
             creator: _,
-			allowlist: _
+			allowlist: _,
+			max_allowlist_size: _,
         } = storage;
 
         object::delete(id);
@@ -129,11 +131,11 @@ module 0x0::verifiable_storage {
 	// Helper: append unique addresses from src to dest
 	fun append_unique(dest: &mut vector<address>, src: &vector<address>, max_size: u8) {
 		let len = vector::length(src);
-		let mut i = 0;
+		let i = 0;
 		while (i < len) {
 			let addr = *vector::borrow(src, i);
 			if (!is_inlist(dest, addr)) {
-				if (vector::length(dest) < max_size) {
+				if (vector::length(dest) < (max_size as u64)) {
 					vector::push_back(dest, addr);
 				} else {
 					assert!(false, E_MAX_ALLOWLIST_EXCEEDED);
