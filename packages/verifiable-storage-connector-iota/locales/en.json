@@ -24,7 +24,8 @@
 			"startFailed": "Failed to start the IOTA Verifiable Storage connector.",
 			"invalidGasBudget": "The gas budget must be greater than 0",
 			"notInAllowList": "The user is not in the allow list",
-			"notCreator": "Only the creator can remove the verifiable item"
+			"notCreator": "Only the creator can remove the verifiable item",
+			"allowListTooBig": "The number of items in the allow list is larger than the maximum allowed"
 		},
 		"iotaVerifiableStorageUtils": {
 			"invalidVerifiableStorageIdFormat": "The verifiable storage ID \"{id}\" has an invalid format"

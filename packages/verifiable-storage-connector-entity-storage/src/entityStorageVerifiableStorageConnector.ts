@@ -105,9 +105,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 			finalAllowList.unshift(controller);
 
 			if (finalAllowList.length > maxAllowListSize) {
-				throw new GeneralError(this.CLASS_NAME, "allowListTooBig", {
-					maxAllowListSize
-				});
+				throw new GeneralError(this.CLASS_NAME, "allowListTooBig");
 			}
 
 			const verifiableItem: VerifiableItem = {
@@ -189,9 +187,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 				finalAllowList.unshift(verifiableItem.creator);
 
 				if (finalAllowList.length > verifiableItem.maxAllowListSize) {
-					throw new GeneralError(this.CLASS_NAME, "allowListTooBig", {
-						maxAllowListSize: verifiableItem.maxAllowListSize
-					});
+					throw new GeneralError(this.CLASS_NAME, "allowListTooBig");
 				}
 				verifiableItem.allowlist = finalAllowList;
 			}

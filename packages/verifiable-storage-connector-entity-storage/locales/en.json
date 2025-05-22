@@ -10,7 +10,7 @@
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Verifiable Storage connector \"{namespace}\"",
 			"notInAllowList": "The user is not in the allow list",
 			"notCreator": "Only the creator can remove the verifiable item",
-			"allowListTooBig": "The allow list is too big, it is larger than {maxAllowListSize}"
+			"allowListTooBig": "The number of items in the allow list is larger than the maximum allowed"
 		}
 	}
 }

@@ -296,6 +296,10 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 		if (!Is.empty(options?.maxAllowListSize)) {
 			Guards.integer(this.CLASS_NAME, nameof(options.maxAllowListSize), options.maxAllowListSize);
 		}
+		const maxAllowListSize = Math.max(
+			options?.maxAllowListSize ?? IotaVerifiableStorageConnector._DEFAULT_ALLOW_LIST_SIZE,
+			1
+		);
 
 		try {
 			const txb = new Transaction();
@@ -309,12 +313,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				arguments: [
 					txb.pure.string(Converter.bytesToBase64(data)),
 					txb.pure.vector("address", allowList ?? []),
-					txb.pure.u16(
-						Math.max(
-							options?.maxAllowListSize ?? IotaVerifiableStorageConnector._DEFAULT_ALLOW_LIST_SIZE,
-							1
-						)
-					)
+					txb.pure.u16(maxAllowListSize)
 				]
 			});
 
@@ -378,6 +377,9 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				receipt: receipt as unknown as IJsonLdNodeObject
 			};
 		} catch (error) {
+			if (Iota.isAbortError(error, 1001)) {
+				throw new GeneralError(this.CLASS_NAME, "allowListTooBig", undefined, error);
+			}
 			throw new GeneralError(
 				this.CLASS_NAME,
 				"creatingFailed",
@@ -476,7 +478,9 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			if (Iota.isAbortError(error, 401)) {
 				throw new UnauthorizedError(this.CLASS_NAME, "notInAllowList", error);
 			}
-
+			if (Iota.isAbortError(error, 1001)) {
+				throw new GeneralError(this.CLASS_NAME, "allowListTooBig", undefined, error);
+			}
 			if (error instanceof GeneralError) {
 				throw error;
 			}
