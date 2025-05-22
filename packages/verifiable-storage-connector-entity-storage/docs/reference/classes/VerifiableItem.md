@@ -43,3 +43,11 @@ The data base64 encoded.
 > **allowlist**: `string`[]
 
 The allow list for modifying the data.
+
+***
+
+### maxAllowListSize
+
+> **maxAllowListSize**: `number`
+
+The maximum size of the allow list.

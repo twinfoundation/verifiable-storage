@@ -3,7 +3,7 @@
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 
 /**
- * Response to getting the Verifiable Storage.
+ * Response to getting the verifiable storage item.
  */
 export interface IVerifiableStorageGetResponse {
 	/**
@@ -11,13 +11,18 @@ export interface IVerifiableStorageGetResponse {
 	 */
 	body: {
 		/**
-		 * The receipt associated to the Verifiable Storage.
+		 * The receipt associated to the verifiable storage item.
 		 */
 		receipt: IJsonLdNodeObject;
 
 		/**
-		 * The data of the Verifiable Storage, this is a string serialized as base64.
+		 * The data of the verifiable storage item, this is a string serialized as base64.
 		 */
 		data?: string;
+
+		/**
+		 * The list of identities that are allowed to modify the item.
+		 */
+		allowList?: string[];
 	};
 }

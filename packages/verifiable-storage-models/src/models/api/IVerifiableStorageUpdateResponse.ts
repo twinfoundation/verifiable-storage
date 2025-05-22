@@ -3,7 +3,7 @@
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 
 /**
- * Response to updating the Verifiable Storage.
+ * Response to updating the verifiable storage item.
  */
 export interface IVerifiableStorageUpdateResponse {
 	/**

@@ -12,12 +12,17 @@ export interface IVerifiableStorageConnector extends IComponent {
 	 * @param controller The identity of the user to access the vault keys.
 	 * @param data The data to store.
 	 * @param allowList The list of identities that are allowed to modify the item.
+	 * @param options Additional options for creating the item.
+	 * @param options.maxAllowListSize The maximum size of the allow list.
 	 * @returns The id of the stored verifiable item in urn format and the receipt.
 	 */
 	create(
 		controller: string,
 		data: Uint8Array,
-		allowList?: string[]
+		allowList?: string[],
+		options?: {
+			maxAllowListSize?: number;
+		}
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;

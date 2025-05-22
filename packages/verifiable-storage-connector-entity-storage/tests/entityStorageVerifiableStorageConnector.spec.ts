@@ -141,4 +141,25 @@ describe("EntityStorageVerifiableStorageConnector", () => {
 
 		await expect(connector.remove(TEST_USER_IDENTITY_1, result.id)).rejects.toThrow("notCreator");
 	});
+
+	test("Can fail to create verifiable item when the allow list exceeds the maximum size", async () => {
+		const data = Converter.utf8ToBytes("Hello, IOTA Verifiable Storage!");
+		const connector = new EntityStorageVerifiableStorageConnector();
+		await expect(
+			connector.create(TEST_USER_IDENTITY_0, data, [TEST_USER_IDENTITY_1], {
+				maxAllowListSize: 1
+			})
+		).rejects.toThrow("allowListTooBig");
+	});
+
+	test("Can fail to update verifiable item when the allow list exceeds the maximum size", async () => {
+		const data = Converter.utf8ToBytes("Hello, IOTA Verifiable Storage!");
+		const connector = new EntityStorageVerifiableStorageConnector();
+		const result = await connector.create(TEST_USER_IDENTITY_0, data, [], {
+			maxAllowListSize: 1
+		});
+		await expect(
+			connector.update(TEST_USER_IDENTITY_0, result.id, data, [TEST_USER_IDENTITY_1])
+		).rejects.toThrow("allowListTooBig");
+	});
 });

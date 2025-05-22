@@ -30,4 +30,10 @@ export class VerifiableItem {
 	 */
 	@property({ type: "array", itemTypeRef: "string" })
 	public allowlist!: string[];
+
+	/**
+	 * The maximum size of the allow list.
+	 */
+	@property({ type: "number" })
+	public maxAllowListSize!: number;
 }

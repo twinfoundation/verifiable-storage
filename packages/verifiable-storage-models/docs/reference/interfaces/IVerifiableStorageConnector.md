@@ -10,7 +10,7 @@ Interface describing a verifiable storage connector.
 
 ### create()
 
-> **create**(`controller`, `data`, `allowList?`): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
+> **create**(`controller`, `data`, `allowList?`, `options?`): `Promise`\<\{ `id`: `string`; `receipt`: `IJsonLdNodeObject`; \}\>
 
 Create an item in verifiable storage.
 
@@ -33,6 +33,16 @@ The data to store.
 `string`[]
 
 The list of identities that are allowed to modify the item.
+
+##### options?
+
+Additional options for creating the item.
+
+###### maxAllowListSize?
+
+`number`
+
+The maximum size of the allow list.
 
 #### Returns
 

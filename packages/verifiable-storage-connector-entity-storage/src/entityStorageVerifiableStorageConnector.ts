@@ -35,6 +35,12 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 	public static NAMESPACE: string = "entity-storage";
 
 	/**
+	 * The default maximum size of the allowlist.
+	 * @internal
+	 */
+	private static readonly _DEFAULT_ALLOW_LIST_SIZE: number = 100;
+
+	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<EntityStorageVerifiableStorageConnector>();
@@ -60,12 +66,17 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 	 * @param controller The identity of the user to access the vault keys.
 	 * @param data The data to store.
 	 * @param allowList The list of identities that are allowed to modify the item.
+	 * @param options Additional options for creating the item.
+	 * @param options.maxAllowListSize The maximum size of the allow list.
 	 * @returns The id of the stored verifiable item in URN format and the receipt.
 	 */
 	public async create(
 		controller: string,
 		data: Uint8Array,
-		allowList?: string[]
+		allowList?: string[],
+		options?: {
+			maxAllowListSize?: number;
+		}
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
@@ -76,14 +87,30 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 		try {
 			const itemId = Converter.bytesToHex(RandomHelper.generate(32));
 
+			const maxAllowListSize = Math.max(
+				options?.maxAllowListSize ??
+					EntityStorageVerifiableStorageConnector._DEFAULT_ALLOW_LIST_SIZE,
+				1
+			);
+
+			const finalAllowList = Array.from(
+				new Set((allowList ?? []).filter(item => item !== controller))
+			);
+			finalAllowList.unshift(controller);
+
+			if (finalAllowList.length > maxAllowListSize) {
+				throw new GeneralError(this.CLASS_NAME, "allowListTooBig", {
+					maxAllowListSize
+				});
+			}
+
 			const verifiableItem: VerifiableItem = {
 				id: itemId,
 				creator: controller,
 				data: Converter.bytesToBase64(data),
-				allowlist: (allowList ?? []).filter(item => item !== controller)
+				allowlist: finalAllowList,
+				maxAllowListSize
 			};
-
-			verifiableItem.allowlist.unshift(controller);
 
 			await this._verifiableStorageEntityStorage.set(verifiableItem);
 
@@ -98,6 +125,9 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 				receipt: receipt as unknown as IJsonLdNodeObject
 			};
 		} catch (error) {
+			if (error instanceof GeneralError) {
+				throw error;
+			}
 			throw new GeneralError(this.CLASS_NAME, "creatingFailed", undefined, error);
 		}
 	}
@@ -149,8 +179,15 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 				verifiableItem.data = Converter.bytesToBase64(data);
 			}
 			if (Is.array(allowList)) {
-				verifiableItem.allowlist = allowList.filter(item => item !== verifiableItem.creator);
-				verifiableItem.allowlist.unshift(verifiableItem.creator);
+				const finalAllowList = Array.from(new Set(allowList.filter(item => item !== controller)));
+				finalAllowList.unshift(verifiableItem.creator);
+
+				if (finalAllowList.length > verifiableItem.maxAllowListSize) {
+					throw new GeneralError(this.CLASS_NAME, "allowListTooBig", {
+						maxAllowListSize: verifiableItem.maxAllowListSize
+					});
+				}
+				verifiableItem.allowlist = finalAllowList;
 			}
 			await this._verifiableStorageEntityStorage.set(verifiableItem);
 
@@ -162,7 +199,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 
 			return receipt as unknown as IJsonLdNodeObject;
 		} catch (error) {
-			if (error instanceof UnauthorizedError) {
+			if (error instanceof UnauthorizedError || error instanceof GeneralError) {
 				throw error;
 			}
 			throw new GeneralError(this.CLASS_NAME, "updatingFailed", undefined, error);

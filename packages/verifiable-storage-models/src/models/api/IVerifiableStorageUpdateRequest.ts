@@ -10,17 +10,23 @@ export interface IVerifiableStorageUpdateRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the Verifiable Storage to update.
+		 * The id of the verifiable storage item to update.
 		 */
 		id: string;
 	};
+
 	/**
 	 * The data to be updated.
 	 */
 	body: {
 		/**
-		 * The data for the Verifiable Storage, this is a string serialized as base64.
+		 * The data which is a string serialized as base64, leave empty if just updating the allowlist.
 		 */
-		data: string;
+		data?: string;
+
+		/**
+		 * An updated list of identities that are allowed to modify the item, send an empty list to remove all entries.
+		 */
+		allowList?: string[];
 	};
 }

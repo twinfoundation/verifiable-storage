@@ -44,14 +44,21 @@ export class VerifiableStorageService implements IVerifiableStorageComponent {
 	}
 
 	/**
-	 * Create an Verifiable Storage.
-	 * @param data The data of the Verifiable Storage.
+	 * Create a verifiable storage item.
+	 * @param data The data for the verifiable storage item.
+	 * @param allowList The list of identities that are allowed to modify the item.
+	 * @param options Additional options for creating the item.
+	 * @param options.maxAllowListSize The maximum size of the allow list.
 	 * @param identity The identity to store the Verifiable Storage operation on.
 	 * @param namespace The namespace to use for the Verifiable Storage.
-	 * @returns The id of the created Verifiable Storage in urn format.
+	 * @returns The id of the created verifiable storage item.
 	 */
 	public async create(
 		data: Uint8Array,
+		allowList?: string[],
+		options?: {
+			maxAllowListSize?: number;
+		},
 		identity?: string,
 		namespace?: string
 	): Promise<{
@@ -67,7 +74,12 @@ export class VerifiableStorageService implements IVerifiableStorageComponent {
 			const verifiableStorageConnector =
 				VerifiableStorageConnectorFactory.get<IVerifiableStorageConnector>(connectorNamespace);
 
-			const verifiableStorageResult = await verifiableStorageConnector.create(identity, data);
+			const verifiableStorageResult = await verifiableStorageConnector.create(
+				identity,
+				data,
+				allowList,
+				options
+			);
 
 			return verifiableStorageResult;
 		} catch (error) {
@@ -78,18 +90,28 @@ export class VerifiableStorageService implements IVerifiableStorageComponent {
 	/**
 	 * Update an item in verifiable storage.
 	 * @param id The id of the item to update.
-	 * @param data The data to store.
+	 * @param data The data to store, optional if updating the allow list.
+	 * @param allowList Updated list of identities that are allowed to modify the item.
 	 * @param identity The identity of the user to access the vault keys.
 	 * @returns The updated receipt.
 	 */
-	public async update(id: string, data: Uint8Array, identity?: string): Promise<IJsonLdNodeObject> {
+	public async update(
+		id: string,
+		data?: Uint8Array,
+		allowList?: string[],
+		identity?: string
+	): Promise<IJsonLdNodeObject> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
 		Guards.stringValue(this.CLASS_NAME, nameof(identity), identity);
 
 		try {
 			const verifiableStorageConnector = this.getConnector(id);
-			const verifiableStorageResult = await verifiableStorageConnector.update(identity, id, data);
+			const verifiableStorageResult = await verifiableStorageConnector.update(
+				identity,
+				id,
+				data,
+				allowList
+			);
 
 			return verifiableStorageResult;
 		} catch (error) {
@@ -99,14 +121,15 @@ export class VerifiableStorageService implements IVerifiableStorageComponent {
 
 	/**
 	 * Get an Verifiable Storage.
-	 * @param id The id of the Verifiable Storage to get.
-	 * @param options Additional options for getting the Verifiable Storage.
+	 * @param id The id of the verifiable storage item to get.
+	 * @param options Additional options for getting the verifiable storage item.
 	 * @param options.includeData Should the data be included in the response, defaults to true.
-	 * @returns The data for the Verifiable Storage.
+	 * @param options.includeAllowList Should the allow list be included in the response, defaults to true.
+	 * @returns The data for the verifiable storage item.
 	 */
 	public async get(
 		id: string,
-		options?: { includeData?: boolean }
+		options?: { includeData?: boolean; includeAllowList?: boolean }
 	): Promise<{
 		data?: Uint8Array;
 		receipt: IJsonLdNodeObject;
@@ -122,7 +145,7 @@ export class VerifiableStorageService implements IVerifiableStorageComponent {
 	}
 
 	/**
-	 * Remove an Verifiable Storage.
+	 * Remove a verifiable storage item.
 	 * @param id The id of the Verifiable Storage to remove.
 	 * @param identity The identity to perform the verifiableStorage operation on.
 	 * @returns Nothing.

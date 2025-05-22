@@ -38,6 +38,12 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	public static readonly NAMESPACE: string = "iota";
 
 	/**
+	 * The default maximum size of the allowlist.
+	 * @internal
+	 */
+	private static readonly _DEFAULT_ALLOW_LIST_SIZE: number = 100;
+
+	/**
 	 * Runtime name for the class.
 	 */
 	public readonly CLASS_NAME: string = nameof<IotaVerifiableStorageConnector>();
@@ -266,12 +272,17 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * @param controller The identity of the user to access the vault keys.
 	 * @param data The data to store.
 	 * @param allowList The list of identities that are allowed to modify the item.
+	 * @param options Additional options for creating the item.
+	 * @param options.maxAllowListSize The maximum size of the allow list.
 	 * @returns The id of the stored verifiable item in URN format and the receipt.
 	 */
 	public async create(
 		controller: string,
 		data: Uint8Array,
-		allowList?: string[]
+		allowList?: string[],
+		options?: {
+			maxAllowListSize?: number;
+		}
 	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
@@ -294,7 +305,13 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				target: `${packageId}::${moduleName}::store_data`,
 				arguments: [
 					txb.pure.string(Converter.bytesToBase64(data)),
-					txb.pure.vector("address", allowList ?? [])
+					txb.pure.vector("address", allowList ?? []),
+					txb.pure.u8(
+						Math.max(
+							options?.maxAllowListSize ?? IotaVerifiableStorageConnector._DEFAULT_ALLOW_LIST_SIZE,
+							1
+						)
+					)
 				]
 			});
 

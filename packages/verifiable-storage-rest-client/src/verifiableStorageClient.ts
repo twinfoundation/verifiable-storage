@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { BaseRestClient } from "@twin.org/api-core";
 import type { IBaseRestClientConfig, INoContentResponse } from "@twin.org/api-models";
-import { Converter, Guards, Urn } from "@twin.org/core";
+import { Converter, Guards, Is, Urn } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 import { nameof } from "@twin.org/nameof";
 import type {
@@ -34,11 +34,20 @@ export class VerifiableStorageClient extends BaseRestClient implements IVerifiab
 	}
 
 	/**
-	 * Create an Verifiable Storage.
-	 * @param data The data of the Verifiable Storage.
-	 * @returns The id of the created Verifiable Storage in urn format.
+	 * Create a verifiable storage item.
+	 * @param data The data for the verifiable storage item.
+	 * @param allowList The list of identities that are allowed to modify the item.
+	 * @param options Additional options for creating the item.
+	 * @param options.maxAllowListSize The maximum size of the allow list.
+	 * @returns The id of the created verifiable storage item.
 	 */
-	public async create(data: Uint8Array): Promise<{
+	public async create(
+		data: Uint8Array,
+		allowList?: string[],
+		options?: {
+			maxAllowListSize?: number;
+		}
+	): Promise<{
 		id: string;
 		receipt: IJsonLdNodeObject;
 	}> {
@@ -49,7 +58,9 @@ export class VerifiableStorageClient extends BaseRestClient implements IVerifiab
 			IVerifiableStorageCreateResponse
 		>("/", "POST", {
 			body: {
-				data: Converter.bytesToBase64(data)
+				data: Converter.bytesToBase64(data),
+				allowList,
+				maxAllowListSize: options?.maxAllowListSize
 			}
 		});
 
@@ -59,12 +70,16 @@ export class VerifiableStorageClient extends BaseRestClient implements IVerifiab
 	/**
 	 * Update an item in verifiable storage.
 	 * @param id The id of the item to update.
-	 * @param data The data to store.
+	 * @param data The data to store, optional if updating the allow list.
+	 * @param allowList Updated list of identities that are allowed to modify the item.
 	 * @returns The updated receipt.
 	 */
-	public async update(id: string, data: Uint8Array): Promise<IJsonLdNodeObject> {
+	public async update(
+		id: string,
+		data?: Uint8Array,
+		allowList?: string[]
+	): Promise<IJsonLdNodeObject> {
 		Urn.guard(this.CLASS_NAME, nameof(id), id);
-		Guards.uint8Array(this.CLASS_NAME, nameof(data), data);
 
 		const response = await this.fetch<
 			IVerifiableStorageUpdateRequest,
@@ -74,7 +89,8 @@ export class VerifiableStorageClient extends BaseRestClient implements IVerifiab
 				id
 			},
 			body: {
-				data: Converter.bytesToBase64(data)
+				data: Is.uint8Array(data) ? Converter.bytesToBase64(data) : undefined,
+				allowList
 			}
 		});
 
@@ -82,11 +98,11 @@ export class VerifiableStorageClient extends BaseRestClient implements IVerifiab
 	}
 
 	/**
-	 * Get an Verifiable Storage.
-	 * @param id The id of the Verifiable Storage to get.
-	 * @param options Additional options for getting the Verifiable Storage.
+	 * Get an verifiable storage item.
+	 * @param id The id of the verifiable storage item to get.
+	 * @param options Additional options for getting the verifiable storage item.
 	 * @param options.includeData Should the data be included in the response, defaults to true.
-	 * @returns The data for the Verifiable Storage.
+	 * @returns The data for the verifiable storage item.
 	 */
 	public async get(
 		id: string,
@@ -117,8 +133,8 @@ export class VerifiableStorageClient extends BaseRestClient implements IVerifiab
 	}
 
 	/**
-	 * Remove an Verifiable Storage.
-	 * @param id The id of the Verifiable Storage to remove in urn format.
+	 * Remove a verifiable storage item.
+	 * @param id The id of the verifiable storage item to remove.
 	 * @returns Nothing.
 	 */
 	public async remove(id: string): Promise<void> {
