@@ -82,7 +82,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * The package ID of the deployed storage Move module.
 	 * @internal
 	 */
-	private _packageId: string | undefined;
+	private _deployedPackageId: string | undefined;
 
 	/**
 	 * The logging connector.
@@ -127,12 +127,14 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * Bootstrap the Verifiable Storage contract.
 	 * @param nodeIdentity The identity of the node.
 	 * @param nodeLoggingConnectorType The node logging connector type, defaults to "node-logging".
+	 * @param componentState The component state.
+	 * @param componentState.contractDeployments The contract deployments.
 	 * @returns True if the bootstrapping process was successful.
 	 */
 	public async start(
 		nodeIdentity: string,
 		nodeLoggingConnectorType?: string,
-		componentState?: { [id: string]: unknown }
+		componentState?: { contractDeployments?: { [id: string]: string } }
 	): Promise<void> {
 		const nodeLogging = LoggingConnectorFactory.getIfExists(
 			nodeLoggingConnectorType ?? "node-logging"
@@ -158,11 +160,17 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				compiledModules = [Array.from(Converter.base64ToBytes(contractData.package))];
 			}
 
-			if (Is.stringValue(componentState?.packageId)) {
-				this._packageId = componentState.packageId;
+			const contractDeployments: { [id: string]: string } =
+				(componentState?.contractDeployments as { [id: string]: string }) ?? {};
+
+			if (Is.stringValue(contractDeployments[contractData.packageId])) {
+				this._deployedPackageId = contractDeployments[contractData.packageId];
 
 				// Check if package exists on the network
-				const packageExists = await Iota.packageExistsOnNetwork(this._client, this._packageId);
+				const packageExists = await Iota.packageExistsOnNetwork(
+					this._client,
+					contractDeployments[contractData.packageId]
+				);
 				if (packageExists) {
 					await nodeLogging?.log({
 						level: "info",
@@ -172,7 +180,8 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 						data: {
 							network: this._config.network,
 							nodeIdentity,
-							packageId: this._packageId
+							contractId: contractData.packageId,
+							deployedPackageId: contractDeployments[contractData.packageId]
 						}
 					});
 
@@ -188,7 +197,8 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				message: "contractDeploymentStarted",
 				data: {
 					network: this._config.network,
-					nodeIdentity
+					nodeIdentity,
+					contractId: contractData.packageId
 				}
 			});
 
@@ -228,17 +238,18 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			// Find the package object (owner field will be Verifiable)
 			const packageObject = result.effects?.created?.find(obj => obj.owner === "Immutable");
 
-			const packageId = packageObject?.reference?.objectId;
-			if (!packageId) {
+			const deployedPackageId = packageObject?.reference?.objectId;
+			if (!Is.stringValue(deployedPackageId)) {
 				throw new GeneralError(this.CLASS_NAME, "packageIdNotFound", {
-					packageId
+					packageId: deployedPackageId
 				});
 			}
 
-			this._packageId = packageId;
+			this._deployedPackageId = deployedPackageId;
 
 			if (componentState) {
-				componentState.packageId = this._packageId;
+				componentState.contractDeployments ??= {};
+				componentState.contractDeployments[contractData.packageId] = deployedPackageId;
 			}
 
 			await nodeLogging?.log({
@@ -247,7 +258,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 				ts: Date.now(),
 				message: "contractDeploymentCompleted",
 				data: {
-					packageId: this._packageId
+					deployedPackageId: this._deployedPackageId
 				}
 			});
 		} catch (error) {
@@ -305,7 +316,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			const txb = new Transaction();
 			txb.setGasBudget(this._gasBudget);
 
-			const packageId = this._packageId;
+			const packageId = this._deployedPackageId;
 			const moduleName = this.getModuleName();
 
 			txb.moveCall({
@@ -369,7 +380,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 
 			const urn = new Urn(
 				"verifiable",
-				`${IotaVerifiableStorageConnector.NAMESPACE}:${this._packageId}:${objectId}`
+				`${IotaVerifiableStorageConnector.NAMESPACE}:${this._deployedPackageId}:${objectId}`
 			);
 
 			return {
@@ -418,7 +429,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 			const txb = new Transaction();
 			txb.setGasBudget(this._gasBudget);
 
-			const packageId = this._packageId;
+			const packageId = this._deployedPackageId;
 			const moduleName = this.getModuleName();
 
 			txb.moveCall({
@@ -679,9 +690,9 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * @internal
 	 */
 	private ensureStarted(): void {
-		if (!this._packageId) {
+		if (!this._deployedPackageId) {
 			throw new GeneralError(this.CLASS_NAME, "connectorNotStarted", {
-				packageId: this._packageId
+				packageId: this._deployedPackageId
 			});
 		}
 	}
