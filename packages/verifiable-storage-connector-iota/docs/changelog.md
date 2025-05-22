@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota - Changelog
 
+## [0.0.1-next.11](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.10...verifiable-storage-connector-iota-v0.0.1-next.11) (2025-05-22)
+
+
+### Features
+
+* improve components state for deployments based on contract id ([ce1dadd](https://github.com/twinfoundation/verifiable-storage/commit/ce1daddeda4a37d5becd49803475ece2a5c01a07))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.10 to 0.0.1-next.11
+
 ## [0.0.1-next.10](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.9...verifiable-storage-connector-iota-v0.0.1-next.10) (2025-05-22)
 
 
