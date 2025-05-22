@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Store the data and return the Verifiable Storage id.
+ * Store the data and return the verifiable storage item id.
  */
 export interface IVerifiableStorageCreateRequest {
 	/**
@@ -10,12 +10,23 @@ export interface IVerifiableStorageCreateRequest {
 	 */
 	body: {
 		/**
-		 * The data for the Verifiable Storage, this is a string serialized as base64.
+		 * The data for the verifiable storage item, this is a string serialized as base64.
 		 */
 		data: string;
 
 		/**
-		 * The namespace of the connector to use for the Verifiable Storage, defaults to component configured namespace.
+		 * The list of identities that are allowed to modify the item.
+		 */
+		allowList?: string[];
+
+		/**
+		 * The maximum size of the allow list.
+		 * @default 100
+		 */
+		maxAllowListSize?: number;
+
+		/**
+		 * The namespace of the connector to use for the verifiable storage item, defaults to component configured namespace.
 		 */
 		namespace?: string;
 	};

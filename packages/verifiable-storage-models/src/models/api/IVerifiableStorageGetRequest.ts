@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Get the Verifiable Storage.
+ * Get the verifiable storage item.
  */
 export interface IVerifiableStorageGetRequest {
 	/**
@@ -10,7 +10,7 @@ export interface IVerifiableStorageGetRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the Verifiable Storage to resolve.
+		 * The id of the verifiable storage item to resolve.
 		 */
 		id: string;
 	};
@@ -20,7 +20,14 @@ export interface IVerifiableStorageGetRequest {
 	body?: {
 		/**
 		 * The flag to include the data.
+		 * @default true
 		 */
-		includeData: boolean;
+		includeData?: boolean;
+
+		/**
+		 * The flag to include the allow list.
+		 * @default true
+		 */
+		includeAllowList?: boolean;
 	};
 }

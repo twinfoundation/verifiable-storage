@@ -36,7 +36,15 @@ if (!Is.stringValue(process.env.TEST_MNEMONIC)) {
          npx "@twin.org/crypto-cli" mnemonic --env ./tests/.env.dev --env-prefix TEST_`
 	);
 }
-
+if (!Is.stringValue(process.env.TEST_2_MNEMONIC)) {
+	// eslint-disable-next-line no-restricted-syntax
+	throw new Error(
+		`Please define TEST_2_MNEMONIC as a 24 word mnemonic either as an environment variable or inside an .env.dev file
+     e.g. TEST_2_MNEMONIC="word0 word1 ... word23"
+     You can generate one using the following command
+     npx "@twin.org/crypto-cli" mnemonic --env ./tests/.env.dev --env-prefix TEST_2_ --merge-env`
+	);
+}
 if (!Is.stringValue(process.env.TEST_NODE_MNEMONIC)) {
 	// eslint-disable-next-line no-restricted-syntax
 	throw new Error(
@@ -48,7 +56,8 @@ if (!Is.stringValue(process.env.TEST_NODE_MNEMONIC)) {
 }
 
 export const TEST_NODE_IDENTITY = "test-node-identity";
-export const TEST_USER_IDENTITY_ID = "test-user-identity";
+export const TEST_USER_IDENTITY_0 = "test-user-identity-0";
+export const TEST_USER_IDENTITY_1 = "test-user-identity-1";
 export const TEST_MNEMONIC_NAME = "test-mnemonic";
 export const TEST_NETWORK = process.env.TEST_NETWORK;
 export const TEST_FAUCET_ENDPOINT = process.env.TEST_FAUCET_ENDPOINT ?? "";
@@ -57,7 +66,8 @@ export const TEST_CLIENT_OPTIONS = {
 	url: process.env.TEST_NODE_ENDPOINT
 };
 
-export const TEST_SEED = Bip39.mnemonicToSeed(process.env.TEST_MNEMONIC);
+export const TEST_SEED_1 = Bip39.mnemonicToSeed(process.env.TEST_MNEMONIC);
+export const TEST_SEED_2 = Bip39.mnemonicToSeed(process.env.TEST_2_MNEMONIC);
 export const TEST_NODE_SEED = Bip39.mnemonicToSeed(process.env.TEST_NODE_MNEMONIC);
 export const TEST_COIN_TYPE = Number.parseInt(process.env.TEST_COIN_TYPE, 10);
 
@@ -82,8 +92,15 @@ EntityStorageConnectorFactory.register("vault-secret", () => secretEntityStorage
 export const TEST_VAULT_CONNECTOR = new EntityStorageVaultConnector();
 VaultConnectorFactory.register("vault", () => TEST_VAULT_CONNECTOR);
 
-const testAddresses = Iota.getAddresses(
+const userAddresses0 = Iota.getAddresses(
 	Bip39.mnemonicToSeed(process.env.TEST_MNEMONIC),
+	TEST_COIN_TYPE,
+	0,
+	0,
+	1
+);
+const userAddresses1 = Iota.getAddresses(
+	Bip39.mnemonicToSeed(process.env.TEST_2_MNEMONIC),
 	TEST_COIN_TYPE,
 	0,
 	0,
@@ -96,7 +113,8 @@ const nodeAddresses = Iota.getAddresses(
 	0,
 	1
 );
-export const TEST_ADDRESS = testAddresses[0];
+export const USER_ADDRESS_0 = userAddresses0[0];
+export const USER_ADDRESS_1 = userAddresses1[0];
 export const NODE_ADDRESS = nodeAddresses[0];
 
 // Store mnemonics in vault for node identity
@@ -105,10 +123,16 @@ await TEST_VAULT_CONNECTOR.setSecret(
 	process.env.TEST_NODE_MNEMONIC
 );
 
-// Store mnemonics in vault for user identity
+// Store mnemonics in vault for user identity 0
 await TEST_VAULT_CONNECTOR.setSecret(
-	`${TEST_USER_IDENTITY_ID}/${TEST_MNEMONIC_NAME}`,
+	`${TEST_USER_IDENTITY_0}/${TEST_MNEMONIC_NAME}`,
 	process.env.TEST_MNEMONIC
+);
+
+// Store mnemonics in vault for user identity 1
+await TEST_VAULT_CONNECTOR.setSecret(
+	`${TEST_USER_IDENTITY_1}/${TEST_MNEMONIC_NAME}`,
+	process.env.TEST_2_MNEMONIC
 );
 
 /**
@@ -116,8 +140,16 @@ await TEST_VAULT_CONNECTOR.setSecret(
  */
 export async function setupTestEnv(): Promise<void> {
 	console.debug(
-		"Test Address",
-		`${TEST_EXPLORER_URL}address/${TEST_ADDRESS}?network=${TEST_NETWORK}`
+		"Test Address Node",
+		`${TEST_EXPLORER_URL}address/${NODE_ADDRESS}?network=${TEST_NETWORK}`
+	);
+	console.debug(
+		"Test Address User 0",
+		`${TEST_EXPLORER_URL}address/${USER_ADDRESS_0}?network=${TEST_NETWORK}`
+	);
+	console.debug(
+		"Test Address User 1",
+		`${TEST_EXPLORER_URL}address/${USER_ADDRESS_1}?network=${TEST_NETWORK}`
 	);
 
 	try {
@@ -128,7 +160,11 @@ export async function setupTestEnv(): Promise<void> {
 		});
 		await requestIotaFromFaucetV0({
 			host: TEST_FAUCET_ENDPOINT,
-			recipient: TEST_ADDRESS
+			recipient: USER_ADDRESS_0
+		});
+		await requestIotaFromFaucetV0({
+			host: TEST_FAUCET_ENDPOINT,
+			recipient: USER_ADDRESS_1
 		});
 	} catch {}
 }

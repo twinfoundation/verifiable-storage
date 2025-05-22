@@ -6,7 +6,7 @@ import type {
 	IRestRoute,
 	ITag
 } from "@twin.org/api-models";
-import { ComponentFactory, Converter, Guards } from "@twin.org/core";
+import { ComponentFactory, Converter, Guards, Is } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import type {
 	IVerifiableStorageComponent,
@@ -31,7 +31,7 @@ const ROUTES_SOURCE = "verifiableStorageRoutes";
 export const tagsVerifiableStorage: ITag[] = [
 	{
 		name: "VerifiableStorage",
-		description: "Endpoints which are modelled to access an Verifiable Storage."
+		description: "Endpoints which are modelled to access a verifiable storage."
 	}
 ];
 
@@ -211,7 +211,7 @@ export function generateRestRoutesVerifiableStorage(
 }
 
 /**
- * Create an Verifiable Storage.
+ * Create a verifiable storage item.
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.
@@ -232,6 +232,10 @@ export async function verifiableStorageCreate(
 	const component = ComponentFactory.get<IVerifiableStorageComponent>(componentName);
 	const result = await component.create(
 		Converter.base64ToBytes(request.body.data),
+		request.body.allowList,
+		{
+			maxAllowListSize: request.body.maxAllowListSize
+		},
 		httpRequestContext.userIdentity,
 		request.body.namespace
 	);
@@ -275,7 +279,8 @@ export async function verifiableStorageUpdate(
 	const component = ComponentFactory.get<IVerifiableStorageComponent>(componentName);
 	const result = await component.update(
 		request.pathParams.id,
-		Converter.base64ToBytes(request.body.data),
+		Is.stringBase64(request.body.data) ? Converter.base64ToBytes(request.body.data) : undefined,
+		request.body.allowList,
 		httpRequestContext.userIdentity
 	);
 	return {
@@ -303,17 +308,17 @@ export async function verifiableStorageGet(
 
 	const component = ComponentFactory.get<IVerifiableStorageComponent>(componentName);
 	const result = await component.get(request.pathParams.id, request.body);
-	const data = result.data ? Converter.bytesToBase64(result.data) : undefined;
 	return {
 		body: {
-			data,
-			receipt: result.receipt
+			data: Is.uint8Array(result.data) ? Converter.bytesToBase64(result.data) : undefined,
+			receipt: result.receipt,
+			allowList: result.allowList
 		}
 	};
 }
 
 /**
- * Remove an Verifiable Storage.
+ * Remove a verifiable storage item.
  * @param httpRequestContext The request context for the API.
  * @param componentName The name of the component to use in the routes.
  * @param request The request.

@@ -12,7 +12,8 @@ console.debug("Setting up test environment from .env and .env.dev files");
 
 dotenv.config({ path: [path.join(__dirname, ".env"), path.join(__dirname, ".env.dev")] });
 
-export const TEST_IDENTITY_ID = "test-identity";
+export const TEST_USER_IDENTITY_0 = "test-identity-1";
+export const TEST_USER_IDENTITY_1 = "test-identity-2";
 
 export const TEST_ADDRESS_1 = "test-address-1";
 export const TEST_ADDRESS_2 = "test-address-2";

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 
 /**
- * Remove the Verifiable Storage.
+ * Remove the verifiable storage item.
  */
 export interface IVerifiableStorageRemoveRequest {
 	/**
@@ -10,7 +10,7 @@ export interface IVerifiableStorageRemoveRequest {
 	 */
 	pathParams: {
 		/**
-		 * The id of the Verifiable Storage to remove.
+		 * The id of the verifiable storage item to remove.
 		 */
 		id: string;
 	};

@@ -4,7 +4,7 @@ import type { ICreatedResponse } from "@twin.org/api-models";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 
 /**
- * Response to storing the Verifiable Storage.
+ * Response to storing the verifiable storage item.
  */
 export interface IVerifiableStorageCreateResponse extends ICreatedResponse {
 	/**
@@ -12,12 +12,12 @@ export interface IVerifiableStorageCreateResponse extends ICreatedResponse {
 	 */
 	body: {
 		/**
-		 * The receipt associated to the Verifiable Storage.
+		 * The receipt associated to the verifiable storage item.
 		 */
 		receipt: IJsonLdNodeObject;
 
 		/**
-		 * The id of the Verifiable Storage.
+		 * The id of the verifiable storage item.
 		 */
 		id: string;
 	};
