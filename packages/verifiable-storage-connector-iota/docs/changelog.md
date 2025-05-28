@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-connector-iota - Changelog
 
+## [0.0.1-next.13](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.12...verifiable-storage-connector-iota-v0.0.1-next.13) (2025-05-28)
+
+
+### Features
+
+* add data types ([d9ad58a](https://github.com/twinfoundation/verifiable-storage/commit/d9ad58afb0c86b80bcb1229d87d2d7f522b20fcd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.12 to 0.0.1-next.13
+
 ## [0.0.1-next.12](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-connector-iota-v0.0.1-next.11...verifiable-storage-connector-iota-v0.0.1-next.12) (2025-05-28)
 
 
