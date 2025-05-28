@@ -1,7 +1,7 @@
 {
-	"packages/verifiable-storage-models": "0.0.1-next.13",
-	"packages/verifiable-storage-connector-entity-storage": "0.0.1-next.13",
-	"packages/verifiable-storage-connector-iota": "0.0.1-next.13",
-	"packages/verifiable-storage-service": "0.0.1-next.13",
-	"packages/verifiable-storage-rest-client": "0.0.1-next.13"
+	"packages/verifiable-storage-models": "0.0.1-next.14",
+	"packages/verifiable-storage-connector-entity-storage": "0.0.1-next.14",
+	"packages/verifiable-storage-connector-iota": "0.0.1-next.14",
+	"packages/verifiable-storage-service": "0.0.1-next.14",
+	"packages/verifiable-storage-rest-client": "0.0.1-next.14"
 }
