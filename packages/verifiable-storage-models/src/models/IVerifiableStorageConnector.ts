@@ -49,7 +49,7 @@ export interface IVerifiableStorageConnector extends IComponent {
 	 * @param options Additional options for getting the item.
 	 * @param options.includeData Should the data be included in the response, defaults to true.
 	 * @param options.includeAllowList Should the allow list be included in the response, defaults to true.
-	 * @returns The data for the item, the receipt and the allowlist.
+	 * @returns The data for the item, the receipt and the allow list.
 	 */
 	get(
 		id: string,

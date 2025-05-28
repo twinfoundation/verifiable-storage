@@ -29,7 +29,7 @@ export class VerifiableItem {
 	 * The allow list for modifying the data.
 	 */
 	@property({ type: "array", itemTypeRef: "string" })
-	public allowlist!: string[];
+	public allowList!: string[];
 
 	/**
 	 * The maximum size of the allow list.

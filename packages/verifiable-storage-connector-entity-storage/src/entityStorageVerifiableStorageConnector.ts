@@ -35,7 +35,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 	public static NAMESPACE: string = "entity-storage";
 
 	/**
-	 * The default maximum size of the allowlist.
+	 * The default maximum size of the allow list.
 	 * @internal
 	 */
 	private static readonly _DEFAULT_ALLOW_LIST_SIZE: number = 100;
@@ -112,7 +112,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 				id: itemId,
 				creator: controller,
 				data: Converter.bytesToBase64(data),
-				allowlist: finalAllowList,
+				allowList: finalAllowList,
 				maxAllowListSize
 			};
 
@@ -175,7 +175,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 			if (Is.empty(verifiableItem)) {
 				throw new NotFoundError(this.CLASS_NAME, "verifiableStorageNotFound");
 			}
-			if (!verifiableItem.allowlist.includes(controller)) {
+			if (!verifiableItem.allowList.includes(controller)) {
 				throw new UnauthorizedError(this.CLASS_NAME, "notInAllowList");
 			}
 
@@ -189,7 +189,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 				if (finalAllowList.length > verifiableItem.maxAllowListSize) {
 					throw new GeneralError(this.CLASS_NAME, "allowListTooBig");
 				}
-				verifiableItem.allowlist = finalAllowList;
+				verifiableItem.allowList = finalAllowList;
 			}
 			await this._verifiableStorageEntityStorage.set(verifiableItem);
 
@@ -214,7 +214,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 	 * @param options Additional options for getting the item.
 	 * @param options.includeData Should the data be included in the response, defaults to true.
 	 * @param options.includeAllowList Should the allow list be included in the response, defaults to true.
-	 * @returns The data for the item, the receipt and the allowlist.
+	 * @returns The data for the item, the receipt and the allow list.
 	 */
 	public async get(
 		id: string,
@@ -256,7 +256,7 @@ export class EntityStorageVerifiableStorageConnector implements IVerifiableStora
 			return {
 				receipt: receipt as unknown as IJsonLdNodeObject,
 				data: includeData ? Converter.base64ToBytes(verifiableItem.data) : undefined,
-				allowList: includeAllowList ? verifiableItem.allowlist : undefined
+				allowList: includeAllowList ? verifiableItem.allowList : undefined
 			};
 		} catch (error) {
 			throw new GeneralError(this.CLASS_NAME, "gettingFailed", undefined, error);

@@ -38,7 +38,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	public static readonly NAMESPACE: string = "iota";
 
 	/**
-	 * The default maximum size of the allowlist.
+	 * The default maximum size of the allow list.
 	 * @internal
 	 */
 	private static readonly _DEFAULT_ALLOW_LIST_SIZE: number = 100;
@@ -438,7 +438,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 					txb.object(objectId),
 					txb.pure.string(Is.empty(data) ? "" : Converter.bytesToBase64(data)),
 					txb.pure.vector("address", allowList ?? []),
-					// If the allowlist is an array with no elements, we need to set the remove_allowlist flag
+					// If the allow list is an array with no elements, we need to set the remove_allowlist flag
 					txb.pure.bool(Is.array(allowList) && allowList.length === 0)
 				]
 			});
@@ -511,7 +511,7 @@ export class IotaVerifiableStorageConnector implements IVerifiableStorageConnect
 	 * @param options Additional options for getting the item.
 	 * @param options.includeData Should the data be included in the response, defaults to true.
 	 * @param options.includeAllowList Should the allow list be included in the response, defaults to true.
-	 * @returns The data for the item, the receipt and the allowlist.
+	 * @returns The data for the item, the receipt and the allow list.
 	 */
 	public async get(
 		id: string,

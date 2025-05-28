@@ -20,7 +20,7 @@ export interface IVerifiableStorageUpdateRequest {
 	 */
 	body: {
 		/**
-		 * The data which is a string serialized as base64, leave empty if just updating the allowlist.
+		 * The data which is a string serialized as base64, leave empty if just updating the allow list.
 		 */
 		data?: string;
 

@@ -34,7 +34,7 @@ describe("EntityStorageVerifiableStorageConnector", () => {
 		expect(store[0].id).toEqual(urn.namespaceSpecific(1));
 		expect(store[0].creator).toEqual(TEST_USER_IDENTITY_0);
 		expect(store[0].data).toEqual(Converter.bytesToBase64(ObjectHelper.toBytes({ bar: "foo" })));
-		expect(store[0].allowlist).toEqual([TEST_USER_IDENTITY_0]);
+		expect(store[0].allowList).toEqual([TEST_USER_IDENTITY_0]);
 
 		verifiableItemId = result.id;
 	});
@@ -58,7 +58,7 @@ describe("EntityStorageVerifiableStorageConnector", () => {
 			).getStore();
 		expect(store[0].creator).toEqual(TEST_USER_IDENTITY_0);
 		expect(store[0].data).toEqual(Converter.bytesToBase64(ObjectHelper.toBytes({ bar: "bar" })));
-		expect(store[0].allowlist).toEqual([TEST_USER_IDENTITY_0]);
+		expect(store[0].allowList).toEqual([TEST_USER_IDENTITY_0]);
 	});
 
 	test("Can resolve a verifiable item", async () => {
