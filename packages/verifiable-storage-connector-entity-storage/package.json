@@ -34,6 +34,7 @@
 	"dependencies": {
 		"@twin.org/core": "next",
 		"@twin.org/crypto": "next",
+		"@twin.org/data-core": "next",
 		"@twin.org/data-json-ld": "next",
 		"@twin.org/entity": "next",
 		"@twin.org/entity-storage-models": "next",

@@ -5,6 +5,8 @@ import packageDetails from './package.json' with { type: 'json' };
 
 const isEsm = process.env.MODULE === 'esm';
 
+const plugins = [json()];
+
 const globs = {};
 if (packageDetails.dependencies) {
 	for (const dep in packageDetails.dependencies) {
@@ -35,7 +37,6 @@ export default {
 		exports: 'named',
 		globals: globs
 	},
-	plugins: [json()],
 	external: [/^node:.*/].concat(Object.keys(globs).map(g => new RegExp(`^${g}`))),
 	onwarn: message => {
 		if (!['EMPTY_BUNDLE', 'CIRCULAR_DEPENDENCY'].includes(message.code)) {
@@ -43,5 +44,6 @@ export default {
 			// eslint-disable-next-line unicorn/no-process-exit
 			process.exit(1);
 		}
-	}
+	},
+	plugins
 };
