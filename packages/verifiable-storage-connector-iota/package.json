@@ -14,7 +14,7 @@
 		"node": ">=20.0.0"
 	},
 	"scripts": {
-		"clean": "rimraf dist coverage",
+		"clean": "rimraf dist coverage docs/reference src/schemas",
 		"build:schema": "ts-to-schema ./ts-to-schema.json ./src/schemas",
 		"build:contracts": "move-to-json \"src/contracts/**/*.move\" src/contracts/compiledModules/compiled-modules.json --platform iota",
 		"build:compile": "tsc",

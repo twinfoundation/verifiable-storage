@@ -1,7 +1,6 @@
 {
 	"baseUrl": "https://schema.twindev.org/verifiable-storage/",
-	"sources": ["./src/models/**/*.ts"],
-	"types": ["IVerifiableStorageEntityStorageReceipt"],
+	"types": ["./src/models/IVerifiableStorageEntityStorageReceipt.ts"],
 	"externalReferences": {
 		"IJsonLd(.*)": "https://schema.twindev.org/json-ld/JsonLd$1"
 	}
