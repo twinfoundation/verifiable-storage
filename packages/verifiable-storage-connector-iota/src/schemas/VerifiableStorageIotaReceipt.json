@@ -1,4 +1,7 @@
 {
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://schema.twindev.org/verifiable-storage/VerifiableStorageIotaReceipt",
+	"description": "Receipt for the IOTA Verifiable Storage connector.",
 	"type": "object",
 	"properties": {
 		"@context": {
@@ -26,6 +29,5 @@
 		"epoch",
 		"digest"
 	],
-	"additionalProperties": false,
-	"description": "Receipt for the IOTA Verifiable Storage connector."
+	"additionalProperties": false
 }
