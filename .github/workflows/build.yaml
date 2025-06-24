@@ -50,12 +50,6 @@ jobs:
           test-faucet-endpoint: ${{ env.TEST_FAUCET_ENDPOINT }}
           gas-station-auth: 'qEyCL6d9BKKFl/tfDGAKeGFkhUlf7FkqiGV7Xw4JUsI='
 
-      # Run tests explicitly for better CI feedback
-      - name: Run Tests
-        run: |
-          # Run tests for packages that have gas station integration
-          cd packages/verifiable-storage-connector-iota && npm test
-
       # Run Lint and Dist
       - name: Run Lint and Dist
         run: |
