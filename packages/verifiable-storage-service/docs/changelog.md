@@ -1,5 +1,21 @@
 # @twin.org/verifiable-storage-service - Changelog
 
+## [0.0.1-next.17](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-service-v0.0.1-next.16...verifiable-storage-service-v0.0.1-next.17) (2025-06-25)
+
+
+### Features
+
+* update connector config and tests for gas station ([#25](https://github.com/twinfoundation/verifiable-storage/issues/25)) ([e0997ff](https://github.com/twinfoundation/verifiable-storage/commit/e0997ffb0f4869dca11f248a9886acdd22c7dcc2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.1-next.16 to 0.0.1-next.17
+  * devDependencies
+    * @twin.org/verifiable-storage-connector-entity-storage bumped from 0.0.1-next.16 to 0.0.1-next.17
+
 ## [0.0.1-next.16](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-service-v0.0.1-next.15...verifiable-storage-service-v0.0.1-next.16) (2025-06-12)
 
 
