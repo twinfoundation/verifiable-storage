@@ -1,0 +1,16 @@
+{
+	"error": {
+		"entityStorageVerifiableStorageConnector": {
+			"verifiableStorageNotFound": "The verifiable item with the Id \"{notFoundId}\" was not found",
+			"signatureFailed": "The signature verification failed",
+			"creatingFailed": "Creating the item failed",
+			"updatingFailed": "Updating the item failed",
+			"gettingFailed": "Getting the item failed",
+			"removingFailed": "Removing the item failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Verifiable Storage connector \"{namespace}\"",
+			"notInAllowList": "The user is not in the allow list",
+			"notCreator": "Only the creator can remove the verifiable item",
+			"allowListTooBig": "The number of items in the allow list is larger than the maximum allowed"
+		}
+	}
+}

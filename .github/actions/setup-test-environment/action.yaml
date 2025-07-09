@@ -1,0 +1,51 @@
+name: 'Setup Verifiable Storage Testing Environment'
+description: 'Sets up Redis, IOTA CLI, and Gas Station with proper configuration for Verifiable Storage testing'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download IOTA CLI
+      shell: bash
+      run: |
+        cd ..
+        wget https://github.com/iotaledger/iota/releases/download/v1.0.0/iota-v1.0.0-linux-x86_64.tgz -O iota-cli.tgz
+        tar xzf iota-cli.tgz
+        rm iota-cli.tgz
+        chmod +x iota
+        sudo mv iota /usr/local/bin/iota
+        iota --version
+
+    - name: Start Twin Gas Station Test Environment
+      shell: bash
+      run: |
+        echo "Starting Twin Gas Station Test Environment (includes Redis + Gas Station)..."
+        docker run -d --name twin-gas-station-test \
+          -p 6379:6379 -p 9527:9527 -p 9184:9184 \
+          twinfoundation/twin-gas-station-test:latest
+
+    - name: Wait for Services to be Ready
+      shell: bash
+      run: |
+        echo "Waiting for Redis and Gas Station to start..."
+
+        # Wait for Redis
+        for i in {1..30}; do
+          if docker exec twin-gas-station-test redis-cli ping 2>/dev/null | grep -q PONG; then
+            echo "✅ Redis is ready!"
+            break
+          fi
+          echo "Attempt $i: Redis not ready yet, waiting..."
+          sleep 2
+        done
+
+        # Wait for Gas Station
+        for i in {1..30}; do
+          if curl -f http://localhost:9527/ 2>/dev/null; then
+            echo "✅ Gas station is ready!"
+            break
+          fi
+          echo "Attempt $i: Gas station not ready yet, waiting..."
+          sleep 2
+        done
+
+        echo "✅ All services are ready!"

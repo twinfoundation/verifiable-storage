@@ -1,0 +1,52 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dist-all-packages:
+    runs-on: ubuntu-latest
+
+    # Add env vars for tests
+    env:
+      TEST_MNEMONIC: ${{ secrets.TEST_MNEMONIC }}
+      TEST_2_MNEMONIC: ${{ secrets.TEST_2_MNEMONIC }}
+      TEST_NODE_MNEMONIC: ${{ secrets.TEST_NODE_MNEMONIC }}
+      TEST_NODE_ENDPOINT: https://api.testnet.iota.cafe
+      TEST_FAUCET_ENDPOINT: https://faucet.testnet.iota.cafe
+      TEST_EXPLORER_URL: https://explorer.iota.org/
+      TEST_NETWORK: testnet
+      TEST_COIN_TYPE: 4218
+      TEST_GAS_STATION_URL: http://localhost:9527
+      TEST_GAS_STATION_AUTH_TOKEN: qEyCL6d9BKKFl/tfDGAKeGFkhUlf7FkqiGV7Xw4JUsI=
+      TEST_GAS_BUDGET: 50000000
+
+    steps:
+      # Get the code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Setup test environment (IOTA CLI + Gas Station)
+      - name: Setup Verifiable Storage Testing Environment
+        uses: ./.github/actions/setup-test-environment
+
+      # Run Lint and Dist
+      - name: Run Lint and Dist
+        run: |
+          npm run lint
+          npm run dist

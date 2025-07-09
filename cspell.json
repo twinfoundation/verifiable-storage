@@ -15,12 +15,16 @@
 		"tsconfig.json",
 		"typedoc.json",
 		".eslintrc.cjs",
-		"**/wordlists/**"
+		"**/wordlists/**",
+		"**/scripts/**",
+		"**/contracts/**"
 	],
-	"words": ["bech", "Faucet", "GTSC", "nameof", "Stiftung", "utxo"],
+	"words": ["abbrev", "autorelease", "bech", "devnet", "Faucet", "nameof", "Stiftung", "utxo"],
 	"ignoreRegExpList": [
 		"/from\\s+(['\"]).*\\1/",
 		"/eslint-disable.*/",
+		"/^```shell[\\s\\S]*?```$/gm",
+		"/^```json[\\s\\S]*?```$/gm",
 		"/tst1.*/",
 		"/^```(.|\\s)*?```\\s*$/gm"
 	]
