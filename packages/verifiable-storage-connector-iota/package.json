@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/verifiable-storage-connector-iota",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "Implementation of the Verifiable Storage connector using IOTA",
 	"repository": {
 		"type": "git",
@@ -39,7 +39,7 @@
 		"@twin.org/data-core": "^0.0.1",
 		"@twin.org/data-json-ld": "^0.0.1",
 		"@twin.org/dlt-iota": "^0.0.1",
-		"@twin.org/verifiable-storage-models": "^0.0.0",
+		"@twin.org/verifiable-storage-models": "^0.0.1",
 		"@twin.org/logging-models": "^0.0.1",
 		"@twin.org/nameof": "^0.0.1",
 		"@twin.org/vault-models": "^0.0.1"
