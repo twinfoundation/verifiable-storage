@@ -1,5 +1,19 @@
 # @twin.org/verifiable-storage-rest-client - Changelog
 
+## 0.0.1 (2025-07-09)
+
+
+### Features
+
+* release to production ([6ce6744](https://github.com/twinfoundation/verifiable-storage/commit/6ce6744c124cca586c1ef0552624378d1207578d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from ^0.0.0 to ^0.0.1
+
 ## [0.0.1-next.17](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-rest-client-v0.0.1-next.16...verifiable-storage-rest-client-v0.0.1-next.17) (2025-06-25)
 
 
