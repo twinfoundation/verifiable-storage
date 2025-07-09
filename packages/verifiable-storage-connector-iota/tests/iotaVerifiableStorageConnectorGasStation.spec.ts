@@ -12,9 +12,9 @@ import {
 	TEST_USER_IDENTITY_1,
 	USER_ADDRESS_0,
 	USER_ADDRESS_1,
-	GAS_STATION_URL,
-	GAS_STATION_AUTH_TOKEN,
-	GAS_BUDGET
+	TEST_GAS_STATION_URL,
+	TEST_GAS_STATION_AUTH_TOKEN,
+	TEST_GAS_BUDGET
 } from "./setupTestEnv";
 import { IotaVerifiableStorageConnector } from "../src/iotaVerifiableStorageConnector";
 import type { IIotaVerifiableStorageConnectorConfig } from "../src/models/IIotaVerifiableStorageConnectorConfig";
@@ -37,11 +37,11 @@ describe("IotaVerifiableStorageConnector with Gas Station", () => {
 			clientOptions: TEST_CLIENT_OPTIONS,
 			vaultMnemonicId: TEST_MNEMONIC_NAME,
 			network: TEST_NETWORK,
-			gasBudget: GAS_BUDGET,
+			gasBudget: TEST_GAS_BUDGET,
 			enableCostLogging: true,
 			gasStation: {
-				gasStationUrl: GAS_STATION_URL,
-				gasStationAuthToken: GAS_STATION_AUTH_TOKEN
+				gasStationUrl: TEST_GAS_STATION_URL,
+				gasStationAuthToken: TEST_GAS_STATION_AUTH_TOKEN
 			}
 		};
 
@@ -50,7 +50,7 @@ describe("IotaVerifiableStorageConnector with Gas Station", () => {
 			clientOptions: TEST_CLIENT_OPTIONS,
 			vaultMnemonicId: TEST_MNEMONIC_NAME,
 			network: TEST_NETWORK,
-			gasBudget: GAS_BUDGET,
+			gasBudget: TEST_GAS_BUDGET,
 			enableCostLogging: true
 		};
 
@@ -106,10 +106,10 @@ describe("IotaVerifiableStorageConnector with Gas Station", () => {
 				clientOptions: TEST_CLIENT_OPTIONS,
 				vaultMnemonicId: TEST_MNEMONIC_NAME,
 				network: TEST_NETWORK,
-				gasBudget: GAS_BUDGET * 2, // Double the default gas budget
+				gasBudget: TEST_GAS_BUDGET * 2, // Double the default gas budget
 				gasStation: {
-					gasStationUrl: GAS_STATION_URL,
-					gasStationAuthToken: GAS_STATION_AUTH_TOKEN
+					gasStationUrl: TEST_GAS_STATION_URL,
+					gasStationAuthToken: TEST_GAS_STATION_AUTH_TOKEN
 				}
 			};
 
@@ -124,7 +124,7 @@ describe("IotaVerifiableStorageConnector with Gas Station", () => {
 
 	describe("Gas Station Integration", () => {
 		test("Should test gas station connectivity before attempting verifiable storage operations", async () => {
-			await expect(fetch(GAS_STATION_URL, { method: "GET" })).resolves.toMatchObject({
+			await expect(fetch(TEST_GAS_STATION_URL, { method: "GET" })).resolves.toMatchObject({
 				ok: true
 			});
 		}, 10000);
@@ -330,7 +330,7 @@ describe("IotaVerifiableStorageConnector with Gas Station", () => {
 				network: TEST_NETWORK,
 				gasStation: {
 					gasStationUrl: "http://localhost:9999", // Invalid port
-					gasStationAuthToken: GAS_STATION_AUTH_TOKEN
+					gasStationAuthToken: TEST_GAS_STATION_AUTH_TOKEN
 				}
 			};
 
@@ -351,7 +351,7 @@ describe("IotaVerifiableStorageConnector with Gas Station", () => {
 				vaultMnemonicId: TEST_MNEMONIC_NAME,
 				network: TEST_NETWORK,
 				gasStation: {
-					gasStationUrl: GAS_STATION_URL,
+					gasStationUrl: TEST_GAS_STATION_URL,
 					gasStationAuthToken: "invalid-token"
 				}
 			};
