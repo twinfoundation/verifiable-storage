@@ -1,5 +1,22 @@
 # @twin.org/verifiable-storage-rest-client - Changelog
 
+## [0.0.2-next.1](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-rest-client-v0.0.2-next.0...verifiable-storage-rest-client-v0.0.2-next.1) (2025-07-16)
+
+
+### Features
+
+* add support for allowlist ([#17](https://github.com/twinfoundation/verifiable-storage/issues/17)) ([9341ea6](https://github.com/twinfoundation/verifiable-storage/commit/9341ea6b95dfbf2a5dc70a53e5979d7d0e8b2de6))
+* update dependencies ([a16a772](https://github.com/twinfoundation/verifiable-storage/commit/a16a77244cb1d312ea5ee74232bcdadd25f2b330))
+* use new dlt packages with latency fix ([#6](https://github.com/twinfoundation/verifiable-storage/issues/6)) ([d81c45b](https://github.com/twinfoundation/verifiable-storage/commit/d81c45bce035864a41bbd498815169d7257fbcb8))
+* use shared store mechanism ([#8](https://github.com/twinfoundation/verifiable-storage/issues/8)) ([8c8ecb8](https://github.com/twinfoundation/verifiable-storage/commit/8c8ecb83d32431952c594ea23d37040991f5b4d3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @twin.org/verifiable-storage-models bumped from 0.0.2-next.0 to 0.0.2-next.1
+
 ## 0.0.1 (2025-07-09)
 
 
