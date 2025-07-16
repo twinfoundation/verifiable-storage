@@ -1,6 +1,6 @@
 # @twin.org/verifiable-storage-models - Changelog
 
-## [0.0.2-next.1](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-models-v0.0.2-next.0...verifiable-storage-models-v0.0.2-next.1) (2025-07-16)
+## [0.0.2-next.0](https://github.com/twinfoundation/verifiable-storage/compare/verifiable-storage-models-v0.0.2-next.0...verifiable-storage-models-v0.0.2-next.0) (2025-07-16)
 
 
 ### Features

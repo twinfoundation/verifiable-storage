@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/verifiable-storage-connector-entity-storage",
-	"version": "0.0.2-next.1",
+	"version": "0.0.2-next.0",
 	"description": "Implementation of the Verifiable Storage connector using entity storage",
 	"repository": {
 		"type": "git",
@@ -39,7 +39,7 @@
 		"@twin.org/entity": "next",
 		"@twin.org/entity-storage-models": "next",
 		"@twin.org/nameof": "next",
-		"@twin.org/verifiable-storage-models": "0.0.2-next.1"
+		"@twin.org/verifiable-storage-models": "0.0.2-next.0"
 	},
 	"devDependencies": {
 		"@rollup/plugin-json": "6.1.0",
