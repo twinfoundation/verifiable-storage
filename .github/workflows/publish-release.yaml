@@ -119,12 +119,12 @@ jobs:
         run: |
           cd ${{ matrix.package }}
           for i in {1..3}; do
-            npm ci && break || {
+            npm install && break || {
               if [ $i -eq 3 ]; then
-                echo "npm ci failed after 3 attempts"
+                echo "npm install failed after 3 attempts"
                 exit 1
               fi
-              echo "npm ci failed, retrying in 30 seconds (attempt $i/3)..."
+              echo "npm install failed, retrying in 30 seconds (attempt $i/3)..."
               sleep 30
             }
           done
