@@ -522,6 +522,7 @@
 					{
 						"type": "array",
 						"minItems": 2,
+						"items": false,
 						"maxItems": 2,
 						"prefixItems": [
 							{
@@ -537,6 +538,7 @@
 					{
 						"type": "array",
 						"minItems": 2,
+						"items": false,
 						"maxItems": 2,
 						"prefixItems": [
 							{
@@ -552,6 +554,7 @@
 					{
 						"type": "array",
 						"minItems": 3,
+						"items": false,
 						"maxItems": 3,
 						"prefixItems": [
 							{
@@ -571,6 +574,7 @@
 					{
 						"type": "array",
 						"minItems": 3,
+						"items": false,
 						"maxItems": 3,
 						"prefixItems": [
 							{
@@ -590,6 +594,7 @@
 					{
 						"type": "array",
 						"minItems": 3,
+						"items": false,
 						"maxItems": 3,
 						"prefixItems": [
 							{
@@ -609,6 +614,7 @@
 					{
 						"type": "array",
 						"minItems": 3,
+						"items": false,
 						"maxItems": 3,
 						"prefixItems": [
 							{
@@ -628,6 +634,7 @@
 					{
 						"type": "array",
 						"minItems": 3,
+						"items": false,
 						"maxItems": 3,
 						"prefixItems": [
 							{
@@ -647,6 +654,7 @@
 					{
 						"type": "array",
 						"minItems": 3,
+						"items": false,
 						"maxItems": 3,
 						"prefixItems": [
 							{
@@ -666,6 +674,7 @@
 					{
 						"type": "array",
 						"minItems": 2,
+						"items": false,
 						"maxItems": 2,
 						"prefixItems": [
 							{
@@ -680,6 +689,7 @@
 					{
 						"type": "array",
 						"minItems": 2,
+						"items": false,
 						"maxItems": 2,
 						"prefixItems": [
 							{
@@ -789,6 +799,7 @@
 					},
 					{
 						"type": "array",
+						"items": false,
 						"prefixItems": [
 							{
 								"$ref": "#/components/schemas/JsonLdContextDefinitionElement"
@@ -811,6 +822,7 @@
 									},
 									{
 										"type": "array",
+										"items": false,
 										"prefixItems": [
 											{
 												"type": "string"
@@ -840,6 +852,7 @@
 									},
 									{
 										"type": "array",
+										"items": false,
 										"prefixItems": [
 											{
 												"anyOf": [
@@ -946,6 +959,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"$ref": "#/components/schemas/JsonLdNodeObject"
@@ -964,6 +978,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"type": "string"
@@ -996,6 +1011,7 @@
 					},
 					{
 						"type": "array",
+						"items": false,
 						"prefixItems": [
 							{
 								"$ref": "#/components/schemas/JsonLdNodeObject"
@@ -1014,6 +1030,7 @@
 						},
 						{
 							"type": "array",
+							"items": false,
 							"prefixItems": [
 								{
 									"$ref": "#/components/schemas/JsonLdIndexMapItem"
@@ -1055,6 +1072,7 @@
 			},
 			"JsonLdJsonArray": {
 				"type": "array",
+				"items": false,
 				"description": "JSON Type for array.",
 				"prefixItems": [
 					{
@@ -1111,6 +1129,7 @@
 						},
 						{
 							"type": "array",
+							"items": false,
 							"prefixItems": [
 								{
 									"type": "string"
@@ -1131,6 +1150,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"$ref": "#/components/schemas/JsonLdListOrSetItem"
@@ -1210,6 +1230,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"type": "string"
@@ -1228,6 +1249,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"$ref": "#/components/schemas/JsonLdNodeObject"
@@ -1243,6 +1265,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"$ref": "#/components/schemas/JsonLdJsonObject"
@@ -1258,6 +1281,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"type": "string"
@@ -1320,6 +1344,7 @@
 							},
 							{
 								"type": "array",
+								"items": false,
 								"prefixItems": [
 									{
 										"$ref": "#/components/schemas/JsonLdListOrSetItem"
@@ -1472,6 +1497,7 @@
 					},
 					"allowList": {
 						"type": "array",
+						"items": false,
 						"description": "The list of identities that are allowed to modify the item.",
 						"prefixItems": [
 							{
@@ -1542,6 +1568,7 @@
 					},
 					"allowList": {
 						"type": "array",
+						"items": false,
 						"description": "The list of identities that are allowed to modify the item.",
 						"prefixItems": [
 							{
@@ -1565,6 +1592,7 @@
 					},
 					"allowList": {
 						"type": "array",
+						"items": false,
 						"description": "An updated list of identities that are allowed to modify the item, send an empty list to remove all entries.",
 						"prefixItems": [
 							{
